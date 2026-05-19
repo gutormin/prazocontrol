@@ -1448,19 +1448,15 @@ window.salvarProcesso = async () => {
   if (!ok) return;
 
   const vencimento = calcularVencimento(dataInicio, dias, tipo);
-  const dados = {
-    num, parte, dataInicio, dias, tipo, obs, vencimento,
-    usuario: usuarioAtual.id,
-    criadoEm: serverTimestamp(),
-  };
+  const dadosBase = { num, parte, dataInicio, dias, tipo, obs, vencimento, usuario: usuarioAtual.id };
 
   loading(true);
   try {
     if (id) {
-      await updateDoc(doc(db, "processos", id), { ...dados, criadoEm: undefined });
+      await updateDoc(doc(db, "processos", id), dadosBase);
       toast("ok", "Processo atualizado com sucesso.");
     } else {
-      await addDoc(collection(db, "processos"), dados);
+      await addDoc(collection(db, "processos"), { ...dadosBase, criadoEm: serverTimestamp() });
       toast("ok", "Processo cadastrado com sucesso.");
     }
     await carregarProcessos();
