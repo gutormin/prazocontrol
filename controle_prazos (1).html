@@ -618,6 +618,9 @@
       <button class="topbar-btn" id="btn-nav-consulta" onclick="irPara('consulta')">
         <i class="fas fa-magnifying-glass"></i> Consultar
       </button>
+      <button class="topbar-btn" id="btn-nav-calc" onclick="irPara('calc')">
+        <i class="fas fa-calculator"></i> Calculadora
+      </button>
       <button class="topbar-btn" id="btn-nav-config" onclick="irPara('config')">
         <i class="fas fa-gear"></i> Configurações
       </button>
@@ -930,6 +933,100 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+
+    <!-- ══ TELA CALCULADORA ══ -->
+    <section id="tela-calc" class="tela">
+      <div class="dash-header">
+        <div class="dash-header-left">
+          <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--g900)">
+            <i class="fas fa-calculator" style="color:var(--primary);margin-right:8px"></i>Calculadora de Prazos
+          </h2>
+          <p style="color:var(--g500);font-size:13px">Calcule prazos em dias úteis ou corridos considerando os feriados cadastrados no sistema</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px">
+        <div class="form-card" style="height:fit-content">
+          <div class="form-section-title" style="margin-bottom:20px">
+            <i class="fas fa-calendar-days" style="color:var(--primary)"></i> Dados para Cálculo
+          </div>
+          <div class="fgroup">
+            <label>Data de Início <span class="req">*</span></label>
+            <input type="date" id="calc-data-inicio" oninput="calcularPrazoCalc()"/>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="fgroup">
+              <label>Dias Úteis</label>
+              <input type="number" id="calc-dias-uteis" placeholder="0" min="0" value="0" oninput="calcularPrazoCalc()"/>
+            </div>
+            <div class="fgroup">
+              <label>Dias Corridos</label>
+              <input type="number" id="calc-dias-corridos" placeholder="0" min="0" value="0" oninput="calcularPrazoCalc()"/>
+            </div>
+          </div>
+          <div style="margin-top:8px">
+            <button class="btn-pri" style="width:100%" onclick="calcularPrazoCalc()">
+              <i class="fas fa-calculator"></i> Calcular
+            </button>
+          </div>
+        </div>
+
+        <div id="calc-resultado-wrap" style="display:flex;flex-direction:column;gap:16px">
+          <div id="calc-res-uteis" class="form-card hidden" style="border-left:4px solid var(--primary)">
+            <div class="form-section-title" style="margin-bottom:14px">
+              <i class="fas fa-briefcase" style="color:var(--primary)"></i> Resultado — Dias Úteis
+            </div>
+            <div style="font-size:12px;color:var(--g500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Data de Vencimento</div>
+            <div id="calc-res-uteis-data" style="font-family:var(--font-display);font-size:32px;font-weight:800;color:var(--primary);margin-bottom:12px"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div style="background:var(--g50);border-radius:8px;padding:12px">
+                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dias Contados</div>
+                <div id="calc-res-uteis-qtd" style="font-size:20px;font-weight:800;color:var(--g800);font-family:var(--font-display)"></div>
+              </div>
+              <div style="background:var(--g50);border-radius:8px;padding:12px">
+                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dia da Semana</div>
+                <div id="calc-res-uteis-diaSemana" style="font-size:16px;font-weight:700;color:var(--g700)"></div>
+              </div>
+            </div>
+            <div id="calc-res-uteis-feriados" style="margin-top:12px"></div>
+          </div>
+
+          <div id="calc-res-corridos" class="form-card hidden" style="border-left:4px solid #7c3aed">
+            <div class="form-section-title" style="margin-bottom:14px">
+              <i class="fas fa-calendar" style="color:#7c3aed"></i> Resultado — Dias Corridos
+            </div>
+            <div style="font-size:12px;color:var(--g500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Data de Vencimento</div>
+            <div id="calc-res-corridos-data" style="font-family:var(--font-display);font-size:32px;font-weight:800;color:#7c3aed;margin-bottom:12px"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div style="background:var(--g50);border-radius:8px;padding:12px">
+                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dias Contados</div>
+                <div id="calc-res-corridos-qtd" style="font-size:20px;font-weight:800;color:var(--g800);font-family:var(--font-display)"></div>
+              </div>
+              <div style="background:var(--g50);border-radius:8px;padding:12px">
+                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dia da Semana</div>
+                <div id="calc-res-corridos-diaSemana" style="font-size:16px;font-weight:700;color:var(--g700)"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="calc-empty" class="form-card" style="text-align:center;padding:40px 20px;color:var(--g400)">
+            <i class="fas fa-calculator" style="font-size:36px;display:block;margin-bottom:12px"></i>
+            <p style="font-size:14px">Preencha a data de início e os dias<br>para calcular o prazo</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card" style="max-width:900px;margin-top:24px">
+        <div class="form-section-title" style="margin-bottom:14px">
+          <i class="fas fa-calendar-xmark" style="color:var(--red)"></i> Feriados Considerados no Cálculo
+        </div>
+        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">
+          Feriados nacionais e estaduais/municipais cadastrados que são descontados na contagem de dias úteis.
+        </p>
+        <div id="calc-feriados-lista" style="display:flex;flex-wrap:wrap;gap:8px"></div>
       </div>
     </section>
 
@@ -1275,12 +1372,13 @@ window.irPara = (tela) => {
   document.querySelectorAll(".tela").forEach(t => t.classList.remove("ativa"));
   document.getElementById(`tela-${tela}`)?.classList.add("ativa");
   document.querySelectorAll(".topbar-btn").forEach(b => b.classList.remove("ativo"));
-  const mapa = { inicio: "btn-nav-inicio", cadastro: "btn-nav-cadastro", consulta: "btn-nav-consulta", config: "btn-nav-config", adm: "btn-nav-adm" };
+  const mapa = { inicio: "btn-nav-inicio", cadastro: "btn-nav-cadastro", consulta: "btn-nav-consulta", config: "btn-nav-config", adm: "btn-nav-adm", calc: "btn-nav-calc" };
   if (mapa[tela]) document.getElementById(mapa[tela])?.classList.add("ativo");
   window.scrollTo(0, 0);
   if (tela === "consulta") renderTabela("consulta");
   if (tela === "adm") carregarUsuarios();
   if (tela === "config") carregarFeriadosExtra();
+  if (tela === "calc") renderCalcFeriados();
 };
 
 /* ══════════════════════════
@@ -1740,6 +1838,111 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape")
     document.querySelectorAll(".modal-overlay:not(.hidden)").forEach(m => m.classList.add("hidden"));
 });
+
+/* ══════════════════════════
+   CALCULADORA DE PRAZOS
+══════════════════════════ */
+const DIAS_SEMANA = ["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
+
+function renderCalcFeriados() {
+  const lista = document.getElementById("calc-feriados-lista");
+  if (!lista) return;
+  // Nacionais fixos
+  const nacionais = [
+    { nome: "Confraternização Universal", data: "01/01" },
+    { nome: "Tiradentes", data: "21/04" },
+    { nome: "Dia do Trabalho", data: "01/05" },
+    { nome: "Independência do Brasil", data: "07/09" },
+    { nome: "Nossa Sra. Aparecida", data: "12/10" },
+    { nome: "Finados", data: "02/11" },
+    { nome: "Proclamação da República", data: "15/11" },
+    { nome: "Dia da Consciência Negra", data: "20/11" },
+    { nome: "Natal", data: "25/12" },
+    { nome: "Páscoa (variável)", data: "—" },
+    { nome: "Carnaval (variável)", data: "—" },
+    { nome: "Corpus Christi (variável)", data: "—" },
+  ];
+  const todos = [...nacionais, ...feriadosExtra.map(f => ({ nome: f.nome, data: f.data, extra: true }))];
+  lista.innerHTML = todos.map(f =>
+    `<span style="display:inline-flex;align-items:center;gap:6px;background:${f.extra ? '#EFF6FF' : '#F1F5F9'};border:1px solid ${f.extra ? '#BFDBFE' : '#E2E8F0'};border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:${f.extra ? 'var(--primary)' : 'var(--g600)'}">
+      <i class="fas fa-calendar-xmark" style="font-size:10px"></i>${f.nome}${f.data && f.data !== '—' ? ' (' + f.data + ')' : ''}
+    </span>`
+  ).join("");
+}
+
+window.calcularPrazoCalc = () => {
+  const dataInicio = document.getElementById("calc-data-inicio").value;
+  const diasUteis   = parseInt(document.getElementById("calc-dias-uteis").value) || 0;
+  const diasCorridos= parseInt(document.getElementById("calc-dias-corridos").value) || 0;
+
+  const resUteis    = document.getElementById("calc-res-uteis");
+  const resCorridos = document.getElementById("calc-res-corridos");
+  const empty       = document.getElementById("calc-empty");
+
+  if (!dataInicio || (diasUteis <= 0 && diasCorridos <= 0)) {
+    resUteis.classList.add("hidden");
+    resCorridos.classList.add("hidden");
+    empty.classList.remove("hidden");
+    return;
+  }
+  empty.classList.add("hidden");
+
+  // Resultado dias úteis
+  if (diasUteis > 0) {
+    const vencUteis = calcularVencimento(dataInicio, diasUteis, "uteis");
+    const dtUteis = dataParaObj(vencUteis);
+    document.getElementById("calc-res-uteis-data").textContent = formatarData(vencUteis);
+    document.getElementById("calc-res-uteis-qtd").textContent = diasUteis + " dias úteis";
+    document.getElementById("calc-res-uteis-diaSemana").textContent = DIAS_SEMANA[dtUteis.getDay()];
+    // Feriados no período
+    const feriadosPeriodo = listarFeriadosPeriodo(dataInicio, vencUteis);
+    const ferEl = document.getElementById("calc-res-uteis-feriados");
+    if (feriadosPeriodo.length > 0) {
+      ferEl.innerHTML = `<div style="font-size:11px;color:var(--g500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Feriados no período (${feriadosPeriodo.length})</div>` +
+        feriadosPeriodo.map(f => `<div style="font-size:12px;color:var(--g600);padding:2px 0">• ${f}</div>`).join("");
+    } else {
+      ferEl.innerHTML = `<div style="font-size:12px;color:var(--green);font-weight:600"><i class="fas fa-check"></i> Nenhum feriado no período</div>`;
+    }
+    resUteis.classList.remove("hidden");
+  } else {
+    resUteis.classList.add("hidden");
+  }
+
+  // Resultado dias corridos
+  if (diasCorridos > 0) {
+    const vencCorridos = calcularVencimento(dataInicio, diasCorridos, "corridos");
+    const dtCorridos = dataParaObj(vencCorridos);
+    document.getElementById("calc-res-corridos-data").textContent = formatarData(vencCorridos);
+    document.getElementById("calc-res-corridos-qtd").textContent = diasCorridos + " dias corridos";
+    document.getElementById("calc-res-corridos-diaSemana").textContent = DIAS_SEMANA[dtCorridos.getDay()];
+    resCorridos.classList.remove("hidden");
+  } else {
+    resCorridos.classList.add("hidden");
+  }
+};
+
+function listarFeriadosPeriodo(dataIni, dataFim) {
+  const ini = dataParaObj(dataIni);
+  const fim = dataParaObj(dataFim);
+  const resultado = [];
+  const anos = new Set();
+  let cur = new Date(ini); cur.setDate(cur.getDate() + 1);
+  while (cur <= fim) { anos.add(cur.getFullYear()); cur.setDate(cur.getDate() + 1); }
+  const allFeriados = {};
+  anos.forEach(ano => {
+    const set = getFeriadosAno(ano);
+    set.forEach(k => { allFeriados[k] = true; });
+  });
+  cur = new Date(ini); cur.setDate(cur.getDate() + 1);
+  while (cur <= fim) {
+    const key = objParaStr(cur);
+    if (allFeriados[key]) {
+      resultado.push(formatarData(key) + " (" + DIAS_SEMANA[cur.getDay()] + ")");
+    }
+    cur.setDate(cur.getDate() + 1);
+  }
+  return resultado;
+}
 
 </script>
 </body>
