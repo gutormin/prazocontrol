@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PrazoControl | Controle de Prazos Processuais</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #1a56db;
+      --primary-d: #1241b3;
+      --primary-l: #EBF2FF;
+      --green: #059669;
+      --green-l: #ECFDF5;
+      --amber: #D97706;
+      --amber-l: #FFFBEB;
+      --red: #DC2626;
+      --red-l: #FEF2F2;
+      --g50: #F8FAFC; --g100: #F1F5F9; --g200: #E2E8F0; --g300: #CBD5E1;
+      --g400: #94A3B8; --g500: #64748B; --g600: #475569; --g700: #334155;
+      --g800: #1E293B; --g900: #0F172A;
+      --radius: 14px; --radius-sm: 9px; --radius-xs: 6px;
+      --shadow: 0 1px 6px rgba(0,0,0,.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.10);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,.14);
+      --trans: .2s ease;
+      --font-display: 'Inter', sans-serif;
+      --font: 'Inter', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: #EEF2F7; color: var(--g800); line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-thumb { background: var(--g300); border-radius: 3px; }
+    .hidden { display: none !important; }
+
+    /* ═══════════════════════════════
+       TELA DE LOGIN
+    ═══════════════════════════════ */
+    #tela-login {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0F172A 0%, #1a2f5a 50%, #1a56db 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    #tela-login::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M40 0L80 40L40 80L0 40z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    .login-box {
+      background: white;
+      border-radius: 24px;
+      padding: 48px 44px;
+      width: 420px;
+      box-shadow: var(--shadow-lg);
+      position: relative; z-index: 1;
+    }
+    .login-logo {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 22px; margin-bottom: 24px;
+    }
+    .login-box h1 {
+      font-family: var(--font-display);
+      font-size: 26px; font-weight: 800;
+      color: var(--g900); margin-bottom: 4px;
+    }
+    .login-box p { color: var(--g500); font-size: 14px; margin-bottom: 32px; }
+    .fgroup { margin-bottom: 18px; }
+    .fgroup label { display: block; font-size: 13px; font-weight: 600; color: var(--g700); margin-bottom: 7px; }
+    .fgroup input {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid var(--g200);
+      border-radius: var(--radius-sm);
+      font-size: 14px; font-family: var(--font);
+      color: var(--g800); outline: none;
+      transition: border-color var(--trans), box-shadow var(--trans);
+    }
+    .fgroup input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,86,219,.12); }
+    .btn-login {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: white; border: none; border-radius: var(--radius-sm);
+      font-size: 15px; font-weight: 700; font-family: var(--font);
+      cursor: pointer; transition: opacity var(--trans), transform var(--trans);
+    }
+    .btn-login:hover { opacity: .92; transform: translateY(-1px); }
+    .login-err { color: var(--red); font-size: 13px; text-align: center; margin-top: 12px; min-height: 20px; }
+
+    /* ═══════════════════════════════
+       TOPBAR
+    ═══════════════════════════════ */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; height: 62px;
+      background: #0F172A;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,.3);
+    }
+    .topbar-brand { display: flex; align-items: center; gap: 11px; }
+    .topbar-logo {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; color: white; font-size: 16px;
+    }
+    .topbar-brand-text strong { color: white; font-size: 15px; font-weight: 800; font-family: var(--font-display); display: block; }
+    .topbar-brand-text span { color: rgba(255,255,255,.35); font-size: 11px; }
+    .topbar-nav { display: flex; gap: 6px; }
+    .topbar-btn {
+      display: flex; align-items: center; gap: 7px;
+      padding: 7px 14px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; font-family: var(--font);
+      cursor: pointer; border: none; transition: all var(--trans);
+      color: rgba(255,255,255,.6); background: transparent;
+    }
+    .topbar-btn:hover { background: rgba(255,255,255,.1); color: white; }
+    .topbar-btn.ativo { background: rgba(255,255,255,.15); color: white; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .user-badge {
+      display: flex; align-items: center; gap: 8px;
+      color: rgba(255,255,255,.7); font-size: 13px;
+    }
+    .user-avatar {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--primary), #60a5fa);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; color: white; font-size: 12px; font-weight: 700;
+    }
+    .btn-logout {
+      padding: 6px 13px; border-radius: 7px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.1);
+      color: rgba(255,255,255,.6); font-size: 12px; font-weight: 600;
+      font-family: var(--font); cursor: pointer; transition: all var(--trans);
+    }
+    .btn-logout:hover { background: rgba(255,255,255,.15); color: white; }
+    .admin-badge {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white; font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 20px; text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    /* ═══════════════════════════════
+       APP WRAPPER
+    ═══════════════════════════════ */
+    .app-wrap { padding-top: 62px; min-height: 100vh; }
+    .tela { display: none; padding: 32px; min-height: calc(100vh - 62px); }
+    .tela.ativa { display: block; }
+
+    /* ═══════════════════════════════
+       DASHBOARD (INÍCIO)
+    ═══════════════════════════════ */
+    .dash-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 14px;
+    }
+    .dash-header-left h2 {
+      font-family: var(--font-display);
+      font-size: 24px; font-weight: 800; color: var(--g900);
+    }
+    .dash-header-left p { color: var(--g500); font-size: 13px; }
+    .dash-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+      margin-bottom: 28px;
+    }
+    @media(max-width: 900px) { .dash-stats { grid-template-columns: repeat(2, 1fr); } }
+    .stat-card {
+      background: white; border-radius: var(--radius); padding: 22px 20px;
+      box-shadow: var(--shadow); border: 1px solid var(--g100);
+      display: flex; align-items: center; gap: 16px;
+    }
+    .stat-ico {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+      flex-shrink: 0;
+    }
+    .stat-ico.blue  { background: var(--primary-l); color: var(--primary); }
+    .stat-ico.green { background: var(--green-l); color: var(--green); }
+    .stat-ico.amber { background: var(--amber-l); color: var(--amber); }
+    .stat-ico.red   { background: var(--red-l); color: var(--red); }
+    .stat-info strong { font-size: 28px; font-weight: 800; font-family: var(--font-display); color: var(--g900); display: block; line-height: 1; }
+    .stat-info span { font-size: 12px; color: var(--g500); font-weight: 500; }
+
+    /* ═══════════════════════════════
+       ALERTAS PISCANDO
+    ═══════════════════════════════ */
+    .alertas-section { margin-bottom: 28px; }
+    .alertas-titulo {
+      font-family: var(--font-display);
+      font-size: 16px; font-weight: 700; color: var(--g800);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .alertas-grid { display: flex; flex-direction: column; gap: 8px; }
+    .alerta-item {
+      display: flex; align-items: center; gap: 14px;
+      background: white; border-radius: 10px;
+      padding: 14px 18px; border-left: 4px solid;
+      box-shadow: var(--shadow);
+      animation: piscar 1.5s ease-in-out infinite;
+    }
+    .alerta-item.verde  { border-color: var(--green); }
+    .alerta-item.amarelo { border-color: var(--amber); }
+    .alerta-item.vermelho { border-color: var(--red); }
+    @keyframes piscar {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .6; }
+    }
+    .alerta-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .verde .alerta-dot  { background: var(--green); }
+    .amarelo .alerta-dot { background: var(--amber); }
+    .vermelho .alerta-dot { background: var(--red); }
+    .alerta-info { flex: 1; }
+    .alerta-info strong { font-size: 14px; font-weight: 700; color: var(--g800); display: block; }
+    .alerta-info span { font-size: 12px; color: var(--g500); }
+    .alerta-dias {
+      font-family: var(--font-display);
+      font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+    }
+    .verde .alerta-dias  { background: var(--green-l); color: var(--green); }
+    .amarelo .alerta-dias { background: var(--amber-l); color: var(--amber); }
+    .vermelho .alerta-dias { background: var(--red-l); color: var(--red); }
+
+    /* ═══════════════════════════════
+       TABELA DE PROCESSOS
+    ═══════════════════════════════ */
+    .table-card {
+      background: white; border-radius: var(--radius);
+      box-shadow: var(--shadow); border: 1px solid var(--g100);
+      overflow: hidden;
+    }
+    .table-header {
+      padding: 18px 22px; border-bottom: 1px solid var(--g100);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    }
+    .table-header h3 {
+      font-family: var(--font-display);
+      font-size: 15px; font-weight: 700; color: var(--g800);
+    }
+    .search-wrap {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--g50); border: 1.5px solid var(--g200);
+      border-radius: var(--radius-sm); padding: 8px 14px; min-width: 260px;
+    }
+    .search-wrap i { color: var(--g400); font-size: 13px; }
+    .search-wrap input {
+      border: none; background: transparent; font-size: 13px;
+      font-family: var(--font); color: var(--g800); outline: none; flex: 1;
+    }
+    .filter-btns { display: flex; gap: 6px; }
+    .filter-btn {
+      padding: 7px 14px; border-radius: 7px;
+      font-size: 12px; font-weight: 600; font-family: var(--font);
+      cursor: pointer; border: 1.5px solid var(--g200);
+      background: white; color: var(--g600); transition: all var(--trans);
+    }
+    .filter-btn:hover, .filter-btn.ativo { background: var(--primary); color: white; border-color: var(--primary); }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      padding: 12px 16px; text-align: left;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--g500);
+      background: var(--g50); border-bottom: 1px solid var(--g100);
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--g100);
+      transition: background var(--trans);
+    }
+    tbody tr:hover { background: var(--g50); }
+    tbody tr:last-child { border-bottom: none; }
+    td { padding: 13px 16px; font-size: 13px; color: var(--g700); }
+    .proc-num {
+      font-family: var(--font-display);
+      font-weight: 700; color: var(--primary); font-size: 13px;
+    }
+    .badge-contagem {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    }
+    .badge-uteis { background: #EFF6FF; color: #1a56db; }
+    .badge-corridos { background: #F5F3FF; color: #7c3aed; }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 600;
+      animation: piscar 1.5s ease-in-out infinite;
+    }
+    .status-verde   { background: var(--green-l); color: var(--green); }
+    .status-amarelo { background: var(--amber-l); color: var(--amber); }
+    .status-vermelho{ background: var(--red-l); color: var(--red); }
+    .status-vencido { background: #fce7e7; color: #991b1b; }
+    .status-normal  { background: var(--g100); color: var(--g600); animation: none; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .td-actions { display: flex; gap: 6px; }
+    .btn-icon {
+      width: 32px; height: 32px; border-radius: 7px;
+      border: none; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; font-size: 13px; transition: all var(--trans);
+    }
+    .btn-icon.view { background: var(--primary-l); color: var(--primary); }
+    .btn-icon.edit { background: var(--amber-l); color: var(--amber); }
+    .btn-icon.del  { background: var(--red-l); color: var(--red); }
+    .btn-icon:hover { filter: brightness(.92); transform: scale(1.05); }
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: var(--g400);
+    }
+    .empty-state i { font-size: 40px; margin-bottom: 14px; display: block; }
+    .empty-state p { font-size: 14px; }
+
+    /* ═══════════════════════════════
+       TELA CADASTRO
+    ═══════════════════════════════ */
+    .tela-header {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 28px;
+    }
+    .btn-voltar {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: white; border: 1.5px solid var(--g200);
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; color: var(--g600); font-size: 15px;
+      transition: all var(--trans);
+    }
+    .btn-voltar:hover { background: var(--g100); }
+    .tela-titulo h2 {
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 800; color: var(--g900);
+    }
+    .tela-titulo p { color: var(--g500); font-size: 13px; }
+    .form-card {
+      background: white; border-radius: var(--radius);
+      padding: 32px; box-shadow: var(--shadow);
+      border: 1px solid var(--g100); max-width: 780px;
+    }
+    .form-section { margin-bottom: 28px; }
+    .form-section-title {
+      font-size: 13px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .6px; color: var(--g500); margin-bottom: 16px;
+      padding-bottom: 10px; border-bottom: 1px solid var(--g100);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    @media(max-width: 640px) {
+      .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
+    }
+    .fgroup-full { grid-column: 1 / -1; }
+    .fgroup label { display: block; font-size: 13px; font-weight: 600; color: var(--g700); margin-bottom: 7px; }
+    .req { color: var(--red); }
+    .fgroup input, .fgroup select, .fgroup textarea {
+      width: 100%; padding: 11px 13px;
+      border: 1.5px solid var(--g200); border-radius: var(--radius-sm);
+      font-size: 14px; font-family: var(--font);
+      color: var(--g800); outline: none;
+      transition: border-color var(--trans), box-shadow var(--trans);
+      background: white;
+    }
+    .fgroup input:focus, .fgroup select:focus, .fgroup textarea:focus {
+      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,86,219,.10);
+    }
+    .fgroup textarea { resize: vertical; min-height: 90px; }
+    .field-err { font-size: 12px; color: var(--red); display: block; margin-top: 4px; }
+    .form-actions { display: flex; gap: 10px; justify-content: flex-end; padding-top: 8px; }
+    .btn-pri {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 11px 22px; border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: white; border: none; font-size: 14px; font-weight: 600;
+      font-family: var(--font); cursor: pointer;
+      transition: opacity var(--trans), transform var(--trans);
+    }
+    .btn-pri:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-sec {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 11px 22px; border-radius: var(--radius-sm);
+      background: white; color: var(--g600);
+      border: 1.5px solid var(--g200); font-size: 14px; font-weight: 600;
+      font-family: var(--font); cursor: pointer; transition: all var(--trans);
+    }
+    .btn-sec:hover { background: var(--g50); }
+
+    /* ═══════════════════════════════
+       CONFIGURAÇÕES
+    ═══════════════════════════════ */
+    .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media(max-width: 800px) { .config-grid { grid-template-columns: 1fr; } }
+    .config-card {
+      background: white; border-radius: var(--radius); padding: 24px;
+      box-shadow: var(--shadow); border: 1px solid var(--g100);
+    }
+    .config-card-title {
+      font-family: var(--font-display);
+      font-size: 15px; font-weight: 700; color: var(--g800);
+      margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+    }
+    .aviso-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 0; border-bottom: 1px solid var(--g100);
+    }
+    .aviso-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .aviso-color {
+      width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+    }
+    .aviso-label { flex: 1; font-size: 13px; font-weight: 500; color: var(--g700); }
+    .aviso-input {
+      width: 70px; padding: 7px 10px;
+      border: 1.5px solid var(--g200); border-radius: var(--radius-xs);
+      font-size: 13px; font-family: var(--font); color: var(--g800);
+      outline: none; text-align: center;
+    }
+    .aviso-input:focus { border-color: var(--primary); }
+    .aviso-suffix { font-size: 12px; color: var(--g500); white-space: nowrap; }
+    .feriado-list { max-height: 260px; overflow-y: auto; }
+    .feriado-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid var(--g100);
+      font-size: 13px;
+    }
+    .feriado-item:last-child { border-bottom: none; }
+    .feriado-nome { font-weight: 600; color: var(--g800); }
+    .feriado-data { color: var(--g500); font-size: 12px; }
+    .btn-del-feriado {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: var(--red-l); color: var(--red);
+      border: none; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; font-size: 12px;
+      transition: all var(--trans); flex-shrink: 0;
+    }
+    .btn-del-feriado:hover { background: var(--red); color: white; }
+    .add-feriado-row {
+      display: grid; grid-template-columns: 1fr 1fr auto;
+      gap: 8px; align-items: end; margin-top: 14px;
+    }
+
+    /* ═══════════════════════════════
+       ADM — USUÁRIOS
+    ═══════════════════════════════ */
+    .users-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .user-card {
+      background: white; border-radius: var(--radius); padding: 20px;
+      box-shadow: var(--shadow); border: 1px solid var(--g100);
+      display: flex; align-items: center; gap: 14px;
+    }
+    .user-card-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #60a5fa);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 16px; font-weight: 700; flex-shrink: 0;
+    }
+    .user-card-info { flex: 1; }
+    .user-card-info strong { font-size: 14px; font-weight: 700; color: var(--g900); display: block; }
+    .user-card-info span { font-size: 12px; color: var(--g500); }
+    .user-card-actions { display: flex; gap: 6px; }
+    .nivel-badge {
+      font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: .4px;
+    }
+    .nivel-adm { background: #FEF3C7; color: #92400E; }
+    .nivel-user { background: var(--primary-l); color: var(--primary); }
+
+    /* ═══════════════════════════════
+       MODAL
+    ═══════════════════════════════ */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.45);
+      backdrop-filter: blur(3px); z-index: 200;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-box {
+      background: white; border-radius: 18px;
+      width: 100%; max-width: 560px;
+      box-shadow: var(--shadow-lg); overflow: hidden;
+    }
+    .modal-header {
+      padding: 22px 26px 0; display: flex;
+      align-items: center; justify-content: space-between;
+    }
+    .modal-header h3 {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 800; color: var(--g900);
+    }
+    .btn-close-modal {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--g100); border: none; cursor: pointer;
+      color: var(--g500); font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--trans);
+    }
+    .btn-close-modal:hover { background: var(--g200); }
+    .modal-body { padding: 22px 26px 26px; }
+    .detalhe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .detalhe-item label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--g400); display: block; margin-bottom: 4px; }
+    .detalhe-item span { font-size: 14px; color: var(--g800); font-weight: 500; }
+    .detalhe-item.full { grid-column: 1 / -1; }
+    .detalhe-obs {
+      background: var(--g50); border-radius: var(--radius-sm);
+      padding: 12px 14px; font-size: 13px; color: var(--g700);
+      margin-top: 4px; line-height: 1.6;
+    }
+    .modal-confirmar-ico {
+      width: 56px; height: 56px; background: var(--red-l);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; color: var(--red); font-size: 22px;
+      margin: 0 auto 16px;
+    }
+
+    /* ═══════════════════════════════
+       TOAST
+    ═══════════════════════════════ */
+    #toast-wrap {
+      position: fixed; bottom: 24px; right: 24px;
+      display: flex; flex-direction: column; gap: 10px; z-index: 300;
+    }
+    .toast {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 18px; border-radius: 10px;
+      font-size: 13px; font-weight: 600;
+      font-family: var(--font); box-shadow: var(--shadow-lg);
+      animation: slideIn .3s ease;
+    }
+    .toast.ok     { background: #ecfdf5; color: #065f46; border-left: 3px solid var(--green); }
+    .toast.erro   { background: var(--red-l); color: #7f1d1d; border-left: 3px solid var(--red); }
+    .toast.aviso  { background: var(--amber-l); color: #78350f; border-left: 3px solid var(--amber); }
+    @keyframes slideIn { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* ═══════════════════════════════
+       LOADING
+    ═══════════════════════════════ */
+    #loading-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.3);
+      backdrop-filter: blur(2px); z-index: 400;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .loading-spin {
+      width: 44px; height: 44px; border: 4px solid rgba(255,255,255,.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ═══════════════════════════════
+       PAGINAÇÃO
+    ═══════════════════════════════ */
+    .paginacao {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; padding: 16px;
+    }
+    .pag-btn {
+      width: 34px; height: 34px; border-radius: 8px;
+      border: 1.5px solid var(--g200); background: white;
+      font-size: 13px; font-weight: 600; font-family: var(--font);
+      color: var(--g600); cursor: pointer; transition: all var(--trans);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pag-btn:hover, .pag-btn.ativo { background: var(--primary); color: white; border-color: var(--primary); }
+    .pag-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* ═══════════════════════════════
+       PRAZO VENCIMENTO PREVIEW
+    ═══════════════════════════════ */
+    .prazo-preview {
+      background: var(--primary-l); border: 1.5px solid #bfdbfe;
+      border-radius: var(--radius-sm); padding: 12px 16px;
+      display: flex; align-items: center; gap: 10px; margin-top: 4px;
+    }
+    .prazo-preview i { color: var(--primary); }
+    .prazo-preview span { font-size: 13px; font-weight: 600; color: var(--primary); }
+  </style>
+</head>
+<body>
+
+<!-- ══ TELA LOGIN ══ -->
+<div id="tela-login">
+  <div class="login-box">
+    <div class="login-logo"><i class="fas fa-scale-balanced"></i></div>
+    <h1>PrazoControl</h1>
+    <p>Controle inteligente de prazos processuais</p>
+    <div class="fgroup">
+      <label>Usuário</label>
+      <input type="text" id="login-usuario" placeholder="seu.usuario" autocomplete="username"/>
+    </div>
+    <div class="fgroup">
+      <label>Senha</label>
+      <input type="password" id="login-senha" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <button class="btn-login" onclick="fazerLogin()">
+      <i class="fas fa-arrow-right-to-bracket"></i> Entrar
+    </button>
+    <div class="login-err" id="login-erro"></div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app-principal" class="hidden">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo"><i class="fas fa-scale-balanced"></i></div>
+      <div class="topbar-brand-text">
+        <strong>PrazoControl</strong>
+        <span>Controle de Prazos</span>
+      </div>
+    </div>
+    <nav class="topbar-nav">
+      <button class="topbar-btn ativo" id="btn-nav-inicio" onclick="irPara('inicio')">
+        <i class="fas fa-house"></i> Início
+      </button>
+      <button class="topbar-btn" id="btn-nav-cadastro" onclick="novoProcesso()">
+        <i class="fas fa-plus"></i> Novo Processo
+      </button>
+      <button class="topbar-btn" id="btn-nav-consulta" onclick="irPara('consulta')">
+        <i class="fas fa-magnifying-glass"></i> Consultar
+      </button>
+      <button class="topbar-btn" id="btn-nav-calc" onclick="irPara('calc')">
+        <i class="fas fa-calculator"></i> Calculadora
+      </button>
+      <button class="topbar-btn" id="btn-nav-config" onclick="irPara('config')">
+        <i class="fas fa-gear"></i> Configurações
+      </button>
+      <button class="topbar-btn hidden" id="btn-nav-adm" onclick="irPara('adm')">
+        <i class="fas fa-users-cog"></i> Usuários
+      </button>
+    </nav>
+    <div class="topbar-right">
+      <div class="user-badge">
+        <div class="user-avatar" id="user-avatar-top">U</div>
+        <span id="user-nome-top">Usuário</span>
+        <span class="admin-badge hidden" id="adm-badge-top">ADM</span>
+      </div>
+      <button class="btn-logout" onclick="fazerLogout()"><i class="fas fa-right-from-bracket"></i> Sair</button>
+    </div>
+  </header>
+
+  <div class="app-wrap">
+
+    <!-- ══ TELA INÍCIO ══ -->
+    <section id="tela-inicio" class="tela ativa">
+      <div class="dash-header">
+        <div class="dash-header-left">
+          <h2 id="dash-boas-vindas">Bom dia!</h2>
+          <p>Acompanhe os prazos processuais em tempo real</p>
+        </div>
+        <button class="btn-pri" onclick="novoProcesso()">
+          <i class="fas fa-plus"></i> Novo Processo
+        </button>
+      </div>
+
+      <!-- STATS -->
+      <div class="dash-stats">
+        <div class="stat-card">
+          <div class="stat-ico blue"><i class="fas fa-folder-open"></i></div>
+          <div class="stat-info">
+            <strong id="stat-total">0</strong>
+            <span>Total de Processos</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-ico green"><i class="fas fa-circle-check"></i></div>
+          <div class="stat-info">
+            <strong id="stat-ok">0</strong>
+            <span>No Prazo</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-ico amber"><i class="fas fa-triangle-exclamation"></i></div>
+          <div class="stat-info">
+            <strong id="stat-atencao">0</strong>
+            <span>Atenção</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-ico red"><i class="fas fa-circle-xmark"></i></div>
+          <div class="stat-info">
+            <strong id="stat-critico">0</strong>
+            <span>Crítico / Vencido</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALERTAS -->
+      <div class="alertas-section" id="alertas-section">
+        <div class="alertas-titulo">
+          <i class="fas fa-bell" style="color:var(--amber)"></i>
+          Alertas de Prazo
+        </div>
+        <div class="alertas-grid" id="alertas-grid">
+          <div class="empty-state" style="padding:30px">
+            <i class="fas fa-bell-slash"></i>
+            <p>Nenhum alerta no momento</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABELA RESUMO -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3><i class="fas fa-list" style="color:var(--primary);margin-right:6px"></i>Todos os Processos</h3>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <div class="search-wrap">
+              <i class="fas fa-magnifying-glass"></i>
+              <input type="text" id="busca-inicio" placeholder="Buscar por nº ou parte..." oninput="filtrarTabela()"/>
+            </div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="tabela-inicio">
+            <thead>
+              <tr>
+                <th>Nº Processo</th>
+                <th>Parte / Assunto</th>
+                <th>Cadastro</th>
+                <th>Vencimento</th>
+                <th>Dias Restantes</th>
+                <th>Contagem</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-inicio"></tbody>
+          </table>
+        </div>
+        <div class="paginacao" id="pag-inicio"></div>
+      </div>
+    </section>
+
+    <!-- ══ TELA CADASTRO ══ -->
+    <section id="tela-cadastro" class="tela">
+      <div class="tela-header">
+        <button class="btn-voltar" onclick="irPara('inicio')"><i class="fas fa-arrow-left"></i></button>
+        <div class="tela-titulo">
+          <h2 id="cad-titulo">Novo Processo</h2>
+          <p id="cad-sub">Preencha os dados do processo para controle de prazo</p>
+        </div>
+      </div>
+      <div class="form-card">
+        <input type="hidden" id="p-id"/>
+        <div class="form-section">
+          <div class="form-section-title">
+            <i class="fas fa-file-lines" style="color:var(--primary)"></i> Identificação do Processo
+          </div>
+          <div class="form-row-2">
+            <div class="fgroup">
+              <label>Nº do Processo <span class="req">*</span></label>
+              <input type="text" id="p-num" placeholder="Ex: 0001234-56.2024.8.09.0000"/>
+              <span class="field-err" id="err-p-num"></span>
+            </div>
+            <div class="fgroup">
+              <label>Parte / Assunto <span class="req">*</span></label>
+              <input type="text" id="p-parte" placeholder="Nome da parte ou assunto"/>
+              <span class="field-err" id="err-p-parte"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">
+            <i class="fas fa-calendar-days" style="color:var(--primary)"></i> Configuração do Prazo
+          </div>
+          <div class="form-row-3">
+            <div class="fgroup">
+              <label>Data de Início da Contagem <span class="req">*</span></label>
+              <input type="date" id="p-data-inicio" onchange="calcularPrazo()"/>
+              <span class="field-err" id="err-p-data"></span>
+            </div>
+            <div class="fgroup">
+              <label>Quantidade de Dias <span class="req">*</span></label>
+              <input type="number" id="p-dias" placeholder="Ex: 15" min="1" onchange="calcularPrazo()"/>
+              <span class="field-err" id="err-p-dias"></span>
+            </div>
+            <div class="fgroup">
+              <label>Tipo de Contagem <span class="req">*</span></label>
+              <select id="p-tipo-contagem" onchange="calcularPrazo()">
+                <option value="uteis">Dias Úteis</option>
+                <option value="corridos">Dias Corridos</option>
+              </select>
+            </div>
+          </div>
+          <div id="prazo-preview-wrap" class="hidden">
+            <div class="prazo-preview">
+              <i class="fas fa-calendar-check"></i>
+              <span id="prazo-preview-txt">Vencimento calculado</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">
+            <i class="fas fa-note-sticky" style="color:var(--primary)"></i> Observações
+          </div>
+          <div class="fgroup">
+            <label>Observações</label>
+            <textarea id="p-obs" placeholder="Informações adicionais sobre o processo..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-sec" onclick="irPara('inicio')"><i class="fas fa-xmark"></i> Cancelar</button>
+          <button class="btn-pri" onclick="salvarProcesso()"><i class="fas fa-floppy-disk"></i> Salvar Processo</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ TELA CONSULTA ══ -->
+    <section id="tela-consulta" class="tela">
+      <div class="dash-header">
+        <div class="dash-header-left">
+          <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--g900)">
+            <i class="fas fa-magnifying-glass" style="color:var(--primary);margin-right:8px"></i>Consultar Processos
+          </h2>
+          <p style="color:var(--g500);font-size:13px">Busque por número de processo ou filtre por prazo</p>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="search-wrap" style="min-width:320px">
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="text" id="busca-consulta" placeholder="Buscar por nº de processo ou parte..." oninput="filtrarConsulta()"/>
+          </div>
+          <div class="filter-btns">
+            <button class="filter-btn ativo" onclick="setFiltroStatus('todos',this)">Todos</button>
+            <button class="filter-btn" onclick="setFiltroStatus('verde',this)">No Prazo</button>
+            <button class="filter-btn" onclick="setFiltroStatus('amarelo',this)">Atenção</button>
+            <button class="filter-btn" onclick="setFiltroStatus('vermelho',this)">Crítico</button>
+            <button class="filter-btn" onclick="setFiltroStatus('vencido',this)">Vencido</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nº Processo</th>
+                <th>Parte / Assunto</th>
+                <th>Cadastro</th>
+                <th>Vencimento</th>
+                <th>Dias Restantes</th>
+                <th>Contagem</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-consulta"></tbody>
+          </table>
+        </div>
+        <div class="paginacao" id="pag-consulta"></div>
+      </div>
+    </section>
+
+    <!-- ══ TELA CONFIGURAÇÕES ══ -->
+    <section id="tela-config" class="tela">
+      <div class="dash-header">
+        <div class="dash-header-left">
+          <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--g900)">
+            <i class="fas fa-gear" style="color:var(--primary);margin-right:8px"></i>Configurações
+          </h2>
+          <p style="color:var(--g500);font-size:13px">Personalize os alertas de prazo e gerencie feriados</p>
+        </div>
+      </div>
+      <div class="config-grid">
+
+        <!-- AVISOS DE PRAZO -->
+        <div class="config-card">
+          <div class="config-card-title">
+            <i class="fas fa-bell" style="color:var(--amber)"></i> Alertas de Prazo
+          </div>
+          <p style="font-size:13px;color:var(--g500);margin-bottom:16px">
+            Configure quantos dias antes do vencimento cada alerta é ativado.
+          </p>
+          <div class="aviso-item">
+            <div class="aviso-color" style="background:var(--green)"></div>
+            <div class="aviso-label">Alerta Verde (atenção leve)</div>
+            <input class="aviso-input" type="number" id="cfg-verde" min="1" value="15"/>
+            <div class="aviso-suffix">dias antes</div>
+          </div>
+          <div class="aviso-item">
+            <div class="aviso-color" style="background:var(--amber)"></div>
+            <div class="aviso-label">Alerta Amarelo (atenção média)</div>
+            <input class="aviso-input" type="number" id="cfg-amarelo" min="1" value="7"/>
+            <div class="aviso-suffix">dias antes</div>
+          </div>
+          <div class="aviso-item">
+            <div class="aviso-color" style="background:var(--red)"></div>
+            <div class="aviso-label">Alerta Vermelho (urgente)</div>
+            <input class="aviso-input" type="number" id="cfg-vermelho" min="1" value="3"/>
+            <div class="aviso-suffix">dias antes</div>
+          </div>
+          <div style="margin-top:20px;text-align:right">
+            <button class="btn-pri" onclick="salvarConfig()">
+              <i class="fas fa-floppy-disk"></i> Salvar Configurações
+            </button>
+          </div>
+        </div>
+
+        <!-- FERIADOS NACIONAIS (info) -->
+        <div class="config-card">
+          <div class="config-card-title">
+            <i class="fas fa-calendar-xmark" style="color:var(--red)"></i> Feriados Nacionais
+          </div>
+          <p style="font-size:13px;color:var(--g500);margin-bottom:12px">
+            Feriados nacionais fixos considerados na contagem de dias úteis.
+          </p>
+          <div class="feriado-list" id="feriados-nacionais-list"></div>
+        </div>
+
+        <!-- FERIADOS ESTADUAIS/MUNICIPAIS (ADM) -->
+        <div class="config-card" id="card-feriados-extra">
+          <div class="config-card-title">
+            <i class="fas fa-map-location-dot" style="color:var(--primary)"></i> Feriados Estaduais / Municipais
+            <span class="admin-badge" style="margin-left:auto">ADM</span>
+          </div>
+          <p style="font-size:13px;color:var(--g500);margin-bottom:12px">
+            Cadastre feriados estaduais e municipais que afetam todos os usuários.
+          </p>
+          <div class="feriado-list" id="feriados-extra-list"></div>
+          <div class="add-feriado-row" id="add-feriado-row">
+            <div class="fgroup" style="margin:0">
+              <label style="font-size:12px">Nome do Feriado</label>
+              <input type="text" id="novo-feriado-nome" placeholder="Ex: Aniversário de Goiás"/>
+            </div>
+            <div class="fgroup" style="margin:0">
+              <label style="font-size:12px">Data (DD/MM)</label>
+              <input type="text" id="novo-feriado-data" placeholder="Ex: 24/10" maxlength="5"/>
+            </div>
+            <button class="btn-pri" style="margin-top:auto" onclick="adicionarFeriado()">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ══ TELA CALCULADORA ══ -->
+    <section id="tela-calc" class="tela">
+      <div class="dash-header">
+        <div class="dash-header-left">
+          <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--g900)">
+            <i class="fas fa-calculator" style="color:var(--primary);margin-right:8px"></i>Calculadora de Prazos
+          </h2>
+          <p style="color:var(--g500);font-size:13px">Calcule prazos em dias úteis ou corridos considerando os feriados cadastrados no sistema</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px">
+        <div class="form-card" style="height:fit-content">
+          <div class="form-section-title" style="margin-bottom:20px">
+            <i class="fas fa-calendar-days" style="color:var(--primary)"></i> Dados para Cálculo
+          </div>
+          <div class="fgroup">
+            <label>Data de Início <span class="req">*</span></label>
+            <input type="date" id="calc-data-inicio" oninput="calcularPrazoCalc()"/>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="fgroup">
+              <label>Dias Úteis</label>
+              <input type="number" id="calc-dias-uteis" placeholder="0" min="0" value="0" oninput="calcularPrazoCalc()"/>
+            </div>
+            <div class="fgroup">
+              <label>Dias Corridos</label>
+              <input type="number" id="calc-dias-corridos" placeholder="0" min="0" value="0" oninput="calcularPrazoCalc()"/>
+            </div>
+          </div>
+          <div style="margin-top:8px">
+            <button class="btn-pri" style="width:100%" onclick="calcularPrazoCalc()">
+              <i class="fas fa-calculator"></i> Calcular
+            </button>
+          </div>
+        </div>
+
+        <div id="calc-resultado-wrap" style="display:flex;flex-direction:column;gap:16px">
+          <div id="calc-res-uteis" class="form-card hidden" style="border-left:4px solid var(--primary)">
+            <div class="form-section-title" style="margin-bottom:14px">
+              <i class="fas fa-briefcase" style="color:var(--primary)"></i> Resultado — Dias Úteis
+            </div>
+            <div style="font-size:12px;color:var(--g500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Data de Vencimento</div>
+            <div id="calc-res-uteis-data" style="font-family:var(--font-display);font-size:32px;font-weight:800;color:var(--primary);margin-bottom:12px"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div style="background:var(--g50);border-radius:8px;padding:12px">
+                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dias Contados</div>
+                <div id="calc-res-uteis-qtd" style="font-size:20px;font-weight:800;color:var(--g800);font-family:var(--font-display)"></div>
+              </div>
+              <div style="background:var(--g50);border-radius:8px;padding:12px">
+                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dia da Semana</div>
+                <div id="calc-res-uteis-diaSemana" style="font-size:16px;font-weight:700;color:var(--g700)"></div>
+              </div>
+            </div>
+            <div id="calc-res-uteis-feriados" style="margin-top:12px"></div>
+          </div>
+
+          <div id="calc-res-corridos" class="form-card hidden" style="border-left:4px solid #7c3aed">
+            <div class="form-section-title" style="margin-bottom:14px">
+              <i class="fas fa-calendar" style="color:#7c3aed"></i> Resultado — Dias Corridos
+            </div>
+            <div style="font-size:12px;color:var(--g500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Data de Vencimento</div>
+            <div id="calc-res-corridos-data" style="font-family:var(--font-display);font-size:32px;font-weight:800;color:#7c3aed;margin-bottom:12px"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div style="background:var(--g50);border-radius:8px;padding:12px">
+                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dias Contados</div>
+                <div id="calc-res-corridos-qtd" style="font-size:20px;font-weight:800;color:var(--g800);font-family:var(--font-display)"></div>
+              </div>
+              <div style="background:var(--g50);border-radius:8px;padding:12px">
+                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dia da Semana</div>
+                <div id="calc-res-corridos-diaSemana" style="font-size:16px;font-weight:700;color:var(--g700)"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="calc-empty" class="form-card" style="text-align:center;padding:40px 20px;color:var(--g400)">
+            <i class="fas fa-calculator" style="font-size:36px;display:block;margin-bottom:12px"></i>
+            <p style="font-size:14px">Preencha a data de início e os dias<br>para calcular o prazo</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card" style="max-width:900px;margin-top:24px">
+        <div class="form-section-title" style="margin-bottom:14px">
+          <i class="fas fa-calendar-xmark" style="color:var(--red)"></i> Feriados Considerados no Cálculo
+        </div>
+        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">
+          Feriados nacionais e estaduais/municipais cadastrados que são descontados na contagem de dias úteis.
+        </p>
+        <div id="calc-feriados-lista" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+      </div>
+    </section>
+
+    <!-- ══ TELA ADM USUÁRIOS ══ -->
+    <section id="tela-adm" class="tela">
+      <div class="dash-header">
+        <div class="dash-header-left">
+          <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--g900)">
+            <i class="fas fa-users-cog" style="color:var(--primary);margin-right:8px"></i>Gerenciar Usuários
+          </h2>
+          <p style="color:var(--g500);font-size:13px">Crie e gerencie contas de acesso ao sistema</p>
+        </div>
+        <button class="btn-pri" onclick="abrirModal('modal-novo-usuario')">
+          <i class="fas fa-user-plus"></i> Novo Usuário
+        </button>
+      </div>
+      <div class="users-grid" id="users-grid">
+        <div class="empty-state"><i class="fas fa-users"></i><p>Carregando usuários...</p></div>
+      </div>
+    </section>
+
+  </div><!-- /app-wrap -->
+</div><!-- /app-principal -->
+
+<!-- ══ MODAL: VER PROCESSO ══ -->
+<div id="modal-ver" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3><i class="fas fa-file-lines" style="color:var(--primary);margin-right:8px"></i>Detalhes do Processo</h3>
+      <button class="btn-close-modal" onclick="fecharModal('modal-ver')"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="modal-ver-body"></div>
+  </div>
+</div>
+
+<!-- ══ MODAL: CONFIRMAR EXCLUIR ══ -->
+<div id="modal-confirmar" class="modal-overlay hidden">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-body" style="text-align:center;padding:36px 28px">
+      <div class="modal-confirmar-ico"><i class="fas fa-trash"></i></div>
+      <h3 style="font-size:18px;font-weight:800;color:var(--g900);margin-bottom:10px">Confirmar exclusão</h3>
+      <p id="confirmar-msg" style="color:var(--g500);font-size:14px;margin-bottom:24px"></p>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button class="btn-sec" onclick="fecharModal('modal-confirmar')">Cancelar</button>
+        <button class="btn-pri" id="btn-confirmar" style="background:var(--red);background-image:none">
+          <i class="fas fa-trash"></i> Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: NOVO USUÁRIO ══ -->
+<div id="modal-novo-usuario" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3><i class="fas fa-user-plus" style="color:var(--primary);margin-right:8px"></i>Novo Usuário</h3>
+      <button class="btn-close-modal" onclick="fecharModal('modal-novo-usuario')"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row-2">
+        <div class="fgroup">
+          <label>Nome Completo <span class="req">*</span></label>
+          <input type="text" id="nu-nome" placeholder="João da Silva"/>
+        </div>
+        <div class="fgroup">
+          <label>Login (usuário) <span class="req">*</span></label>
+          <input type="text" id="nu-login" placeholder="joao.silva"/>
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div class="fgroup">
+          <label>Senha <span class="req">*</span></label>
+          <input type="password" id="nu-senha" placeholder="Mínimo 6 caracteres"/>
+        </div>
+        <div class="fgroup">
+          <label>Nível de Acesso</label>
+          <select id="nu-nivel">
+            <option value="usuario">Usuário</option>
+            <option value="adm">Administrador</option>
+          </select>
+        </div>
+      </div>
+      <div style="text-align:right;margin-top:8px">
+        <button class="btn-sec" onclick="fecharModal('modal-novo-usuario')" style="margin-right:8px">Cancelar</button>
+        <button class="btn-pri" onclick="criarUsuario()"><i class="fas fa-floppy-disk"></i> Criar Usuário</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-wrap"></div>
+<!-- LOADING -->
+<div id="loading-overlay" class="hidden"><div class="loading-spin"></div></div>
+
+<script type="module">
+import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, doc, addDoc, getDoc,
+         getDocs, updateDoc, deleteDoc, setDoc,
+         query, orderBy, serverTimestamp, where }
+  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* ══════════════════════════
+   🔥 FIREBASE CONFIG
+   ⚠️  SUBSTITUA pelos seus dados
+══════════════════════════ */
+const firebaseConfig = {
+  apiKey:            "AIzaSyDZcQ4Lq0W5PH-vxppcsZjYgI2wyACS08g",
+  authDomain:        "prazocontrol-4145c.firebaseapp.com",
+  projectId:         "prazocontrol-4145c",
+  storageBucket:     "prazocontrol-4145c.firebasestorage.app",
+  messagingSenderId: "970087762119",
+  appId:             "1:970087762119:web:db92091d97b86a01c396e2"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+/* ══════════════════════════
+   ESTADO GLOBAL
+══════════════════════════ */
+let usuarioAtual    = null;
+let todosProcessos  = [];
+let procFiltrados   = [];
+let filtroStatusAtual = 'todos';
+let pagAtual        = 1;
+let pagConsultaAtual = 1;
+const POR_PAGINA    = 15;
+
+let configAlertas = { verde: 15, amarelo: 7, vermelho: 3 };
+let feriadosExtra = [];
+
+/* ══════════════════════════
+   FERIADOS NACIONAIS (FIXOS)
+══════════════════════════ */
+const FERIADOS_NACIONAIS = [
+  { nome: "Confraternização Universal",    data: "01/01" },
+  { nome: "Carnaval",                      data: "variável" },
+  { nome: "Paixão de Cristo",              data: "variável" },
+  { nome: "Tiradentes",                    data: "21/04" },
+  { nome: "Dia do Trabalho",               data: "01/05" },
+  { nome: "Corpus Christi",                data: "variável" },
+  { nome: "Independência do Brasil",       data: "07/09" },
+  { nome: "Nossa Sra. Aparecida",          data: "12/10" },
+  { nome: "Finados",                       data: "02/11" },
+  { nome: "Proclamação da República",      data: "15/11" },
+  { nome: "Dia da Consciência Negra",      data: "20/11" },
+  { nome: "Natal",                         data: "25/12" },
+];
+
+/* ══════════════════════════
+   UTILS
+══════════════════════════ */
+function toast(tipo, msg) {
+  const ico = { ok: "circle-check", erro: "circle-xmark", aviso: "triangle-exclamation" };
+  const el = document.createElement("div");
+  el.className = `toast ${tipo}`;
+  el.innerHTML = `<i class="fas fa-${ico[tipo]||"info"}"></i><span>${msg}</span>`;
+  document.getElementById("toast-wrap").appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+
+function loading(v) {
+  document.getElementById("loading-overlay").classList.toggle("hidden", !v);
+}
+
+window.abrirModal = (id) => document.getElementById(id)?.classList.remove("hidden");
+window.fecharModal = (id) => document.getElementById(id)?.classList.add("hidden");
+
+function formatarData(dateStr) {
+  if (!dateStr) return "-";
+  const [y, m, d] = dateStr.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function dataParaObj(str) {
+  const [y, m, d] = str.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function objParaStr(dt) {
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth() + 1).padStart(2, "0");
+  const d = String(dt.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+/* ══════════════════════════
+   CÁLCULO DE PRAZO
+══════════════════════════ */
+function getFeriadosAno(ano) {
+  const feriadosFixos = [
+    `${ano}-01-01`, `${ano}-04-21`, `${ano}-05-01`,
+    `${ano}-09-07`, `${ano}-10-12`, `${ano}-11-02`,
+    `${ano}-11-15`, `${ano}-11-20`, `${ano}-12-25`,
+  ];
+  // Páscoa (algoritmo de Butcher)
+  const a = ano % 19, b = Math.floor(ano / 100), c = ano % 100;
+  const d2 = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d2 - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m2 = Math.floor((a + 11 * h + 22 * l) / 451);
+  const mes = Math.floor((h + l - 7 * m2 + 114) / 31);
+  const dia = ((h + l - 7 * m2 + 114) % 31) + 1;
+  const pascoa = new Date(ano, mes - 1, dia);
+  const sexta = new Date(pascoa); sexta.setDate(pascoa.getDate() - 2);
+  const carnaval1 = new Date(pascoa); carnaval1.setDate(pascoa.getDate() - 48);
+  const carnaval2 = new Date(pascoa); carnaval2.setDate(pascoa.getDate() - 47);
+  const corpus = new Date(pascoa); corpus.setDate(pascoa.getDate() + 60);
+  [sexta, carnaval1, carnaval2, corpus].forEach(d => feriadosFixos.push(objParaStr(d)));
+
+  // Feriados extras
+  feriadosExtra.forEach(f => {
+    if (f.data && f.data.includes("/")) {
+      const [dd, mm] = f.data.split("/");
+      feriadosExtra.forEach(() => {});
+      const chave = `${ano}-${mm.padStart(2,"0")}-${dd.padStart(2,"0")}`;
+      feriadosFixos.push(chave);
+    }
+  });
+
+  return new Set(feriadosFixos);
+}
+
+function calcularVencimento(dataInicio, qtdDias, tipo) {
+  const dt = dataParaObj(dataInicio);
+  if (tipo === "corridos") {
+    dt.setDate(dt.getDate() + qtdDias);
+    return objParaStr(dt);
+  }
+  // dias úteis
+  let cont = 0;
+  const feriados = getFeriadosAno(dt.getFullYear());
+  const feriadosProx = getFeriadosAno(dt.getFullYear() + 1);
+  const allFeriados = new Set([...feriados, ...feriadosProx]);
+  let atual = new Date(dt);
+  while (cont < qtdDias) {
+    atual.setDate(atual.getDate() + 1);
+    const dow = atual.getDay();
+    const key = objParaStr(atual);
+    if (dow !== 0 && dow !== 6 && !allFeriados.has(key)) cont++;
+  }
+  return objParaStr(atual);
+}
+
+function diasRestantes(vencimento) {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const dt = dataParaObj(vencimento);
+  dt.setHours(0, 0, 0, 0);
+  return Math.round((dt - hoje) / (1000 * 60 * 60 * 24));
+}
+
+function getStatusClass(dias) {
+  if (dias < 0) return "vencido";
+  if (dias <= configAlertas.vermelho) return "vermelho";
+  if (dias <= configAlertas.amarelo) return "amarelo";
+  if (dias <= configAlertas.verde) return "verde";
+  return "normal";
+}
+
+function getStatusLabel(dias) {
+  if (dias < 0) return `Vencido há ${Math.abs(dias)}d`;
+  if (dias === 0) return "Vence hoje!";
+  if (dias <= configAlertas.vermelho) return `${dias}d — URGENTE`;
+  if (dias <= configAlertas.amarelo) return `${dias}d — Atenção`;
+  if (dias <= configAlertas.verde) return `${dias}d — Próximo`;
+  return `${dias} dias`;
+}
+
+/* ══════════════════════════
+   LOGIN / LOGOUT
+══════════════════════════ */
+window.fazerLogin = async () => {
+  const usuario = document.getElementById("login-usuario").value.trim();
+  const senha   = document.getElementById("login-senha").value.trim();
+  const errEl   = document.getElementById("login-erro");
+  errEl.textContent = "";
+
+  if (!usuario || !senha) { errEl.textContent = "Preencha usuário e senha."; return; }
+  loading(true);
+  try {
+    const snap = await getDoc(doc(db, "usuarios", usuario));
+    if (!snap.exists()) { errEl.textContent = "Usuário não encontrado."; return; }
+    const dados = snap.data();
+    if (dados.senha !== senha) { errEl.textContent = "Senha incorreta."; return; }
+    usuarioAtual = { id: usuario, ...dados };
+    iniciarApp();
+  } catch(e) {
+    errEl.textContent = "Erro ao conectar. Tente novamente.";
+  } finally { loading(false); }
+};
+
+document.getElementById("login-senha").addEventListener("keydown", e => {
+  if (e.key === "Enter") window.fazerLogin();
+});
+
+window.fazerLogout = () => {
+  usuarioAtual = null;
+  todosProcessos = [];
+  document.getElementById("tela-login").style.display = "flex";
+  document.getElementById("app-principal").classList.add("hidden");
+  document.getElementById("login-usuario").value = "";
+  document.getElementById("login-senha").value = "";
+};
+
+async function iniciarApp() {
+  document.getElementById("tela-login").style.display = "none";
+  document.getElementById("app-principal").classList.remove("hidden");
+
+  // Avatar e nome
+  const iniciais = usuarioAtual.nome.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase();
+  document.getElementById("user-avatar-top").textContent = iniciais;
+  document.getElementById("user-nome-top").textContent = usuarioAtual.nome;
+
+  const hora = new Date().getHours();
+  const saudacao = hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
+  document.getElementById("dash-boas-vindas").textContent = `${saudacao}, ${usuarioAtual.nome.split(" ")[0]}!`;
+
+  if (usuarioAtual.nivel === "adm") {
+    document.getElementById("adm-badge-top").classList.remove("hidden");
+    document.getElementById("btn-nav-adm").classList.remove("hidden");
+    document.getElementById("card-feriados-extra").style.display = "block";
+    document.getElementById("add-feriado-row").style.display = "grid";
+    carregarUsuarios();
+  } else {
+    document.getElementById("card-feriados-extra").style.display = "block";
+    document.getElementById("add-feriado-row").style.display = "none";
+  }
+
+  await carregarConfig();
+  await carregarProcessos();
+  renderFeriadosNacionais();
+  irPara("inicio");
+}
+
+/* ══════════════════════════
+   NAVEGAÇÃO
+══════════════════════════ */
+window.irPara = (tela) => {
+  document.querySelectorAll(".tela").forEach(t => t.classList.remove("ativa"));
+  document.getElementById(`tela-${tela}`)?.classList.add("ativa");
+  document.querySelectorAll(".topbar-btn").forEach(b => b.classList.remove("ativo"));
+  const mapa = { inicio: "btn-nav-inicio", cadastro: "btn-nav-cadastro", consulta: "btn-nav-consulta", config: "btn-nav-config", adm: "btn-nav-adm", calc: "btn-nav-calc" };
+  if (mapa[tela]) document.getElementById(mapa[tela])?.classList.add("ativo");
+  window.scrollTo(0, 0);
+  if (tela === "consulta") renderTabela("consulta");
+  if (tela === "adm") carregarUsuarios();
+  if (tela === "config") carregarFeriadosExtra();
+  if (tela === "calc") renderCalcFeriados();
+};
+
+/* ══════════════════════════
+   PROCESSOS
+══════════════════════════ */
+async function carregarProcessos() {
+  loading(true);
+  try {
+    let q;
+    if (usuarioAtual.nivel === "adm") {
+      // Admin vê todos os processos
+      q = query(collection(db, "processos"), orderBy("criadoEm", "desc"));
+    } else {
+      // Usuário comum vê apenas os seus
+      q = query(collection(db, "processos"),
+        where("usuario", "==", usuarioAtual.id),
+        orderBy("criadoEm", "desc"));
+    }
+    const snap = await getDocs(q);
+    todosProcessos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    procFiltrados = [...todosProcessos];
+    renderDashboard();
+    renderTabela("inicio");
+    renderTabela("consulta");
+  } catch(e) {
+    toast("erro", "Erro ao carregar processos.");
+  } finally { loading(false); }
+}
+
+window.novoProcesso = () => {
+  document.getElementById("p-id").value = "";
+  document.getElementById("p-num").value = "";
+  document.getElementById("p-parte").value = "";
+  document.getElementById("p-data-inicio").value = new Date().toISOString().split("T")[0];
+  document.getElementById("p-dias").value = "";
+  document.getElementById("p-tipo-contagem").value = "uteis";
+  document.getElementById("p-obs").value = "";
+  document.getElementById("prazo-preview-wrap").classList.add("hidden");
+  document.getElementById("cad-titulo").textContent = "Novo Processo";
+  document.getElementById("cad-sub").textContent = "Preencha os dados para controle de prazo";
+  document.getElementById("err-p-num").textContent = "";
+  document.getElementById("err-p-parte").textContent = "";
+  document.getElementById("err-p-data").textContent = "";
+  document.getElementById("err-p-dias").textContent = "";
+  irPara("cadastro");
+};
+
+window.calcularPrazo = () => {
+  const dataInicio = document.getElementById("p-data-inicio").value;
+  const dias       = parseInt(document.getElementById("p-dias").value);
+  const tipo       = document.getElementById("p-tipo-contagem").value;
+  const wrap       = document.getElementById("prazo-preview-wrap");
+  const txt        = document.getElementById("prazo-preview-txt");
+  if (!dataInicio || !dias || dias < 1) { wrap.classList.add("hidden"); return; }
+  const venc = calcularVencimento(dataInicio, dias, tipo);
+  const dr = diasRestantes(venc);
+  const tipoLabel = tipo === "uteis" ? "úteis" : "corridos";
+  txt.textContent = `Vencimento: ${formatarData(venc)} — ${dr < 0 ? "Vencido" : dr + " dias restantes"} (${dias} dias ${tipoLabel})`;
+  wrap.classList.remove("hidden");
+};
+
+window.salvarProcesso = async () => {
+  const id         = document.getElementById("p-id").value;
+  const num        = document.getElementById("p-num").value.trim();
+  const parte      = document.getElementById("p-parte").value.trim();
+  const dataInicio = document.getElementById("p-data-inicio").value;
+  const dias       = parseInt(document.getElementById("p-dias").value);
+  const tipo       = document.getElementById("p-tipo-contagem").value;
+  const obs        = document.getElementById("p-obs").value.trim();
+
+  let ok = true;
+  if (!num)        { document.getElementById("err-p-num").textContent   = "Campo obrigatório."; ok = false; } else document.getElementById("err-p-num").textContent = "";
+  if (!parte)      { document.getElementById("err-p-parte").textContent = "Campo obrigatório."; ok = false; } else document.getElementById("err-p-parte").textContent = "";
+  if (!dataInicio) { document.getElementById("err-p-data").textContent  = "Campo obrigatório."; ok = false; } else document.getElementById("err-p-data").textContent = "";
+  if (!dias || dias < 1) { document.getElementById("err-p-dias").textContent = "Informe um número válido."; ok = false; } else document.getElementById("err-p-dias").textContent = "";
+  if (!ok) return;
+
+  const vencimento = calcularVencimento(dataInicio, dias, tipo);
+  const dadosBase = { num, parte, dataInicio, dias, tipo, obs, vencimento, usuario: usuarioAtual.id };
+
+  loading(true);
+  try {
+    if (id) {
+      await updateDoc(doc(db, "processos", id), dadosBase);
+      toast("ok", "Processo atualizado com sucesso.");
+    } else {
+      await addDoc(collection(db, "processos"), { ...dadosBase, criadoEm: serverTimestamp() });
+      toast("ok", "Processo cadastrado com sucesso.");
+    }
+    await carregarProcessos();
+    irPara("inicio");
+  } catch(e) {
+    toast("erro", "Erro ao salvar processo.");
+  } finally { loading(false); }
+};
+
+window.verProcesso = (id) => {
+  const p = todosProcessos.find(x => x.id === id);
+  if (!p) return;
+  const dr = diasRestantes(p.vencimento);
+  const sc = getStatusClass(dr);
+  const sl = getStatusLabel(dr);
+  const podeEditar = usuarioAtual.nivel === "adm" || p.usuario === usuarioAtual.id;
+  document.getElementById("modal-ver-body").innerHTML = `
+    <div class="detalhe-grid">
+      <div class="detalhe-item"><label>Nº do Processo</label><span class="proc-num">${p.num}</span></div>
+      <div class="detalhe-item"><label>Parte / Assunto</label><span>${p.parte}</span></div>
+      <div class="detalhe-item"><label>Data de Início</label><span>${formatarData(p.dataInicio)}</span></div>
+      <div class="detalhe-item"><label>Vencimento</label><span>${formatarData(p.vencimento)}</span></div>
+      <div class="detalhe-item"><label>Prazo</label><span>${p.dias} dias ${p.tipo === "uteis" ? "úteis" : "corridos"}</span></div>
+      <div class="detalhe-item"><label>Status</label>
+        <span class="status-badge status-${sc}"><span class="status-dot"></span>${sl}</span>
+      </div>
+      ${p.obs ? `<div class="detalhe-item full"><label>Observações</label><div class="detalhe-obs">${p.obs}</div></div>` : ""}
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:22px">
+      <button class="btn-sec" onclick="fecharModal('modal-ver')">Fechar</button>
+      ${podeEditar ? `<button class="btn-pri" onclick="fecharModal('modal-ver');editarProcesso('${id}')"><i class="fas fa-pen"></i> Editar</button>` : ""}
+    </div>`;
+  abrirModal("modal-ver");
+};
+
+window.editarProcesso = (id) => {
+  const p = todosProcessos.find(x => x.id === id);
+  if (!p) return;
+  // Bloquear edição se não for dono nem admin
+  if (usuarioAtual.nivel !== "adm" && p.usuario !== usuarioAtual.id) {
+    toast("aviso", "Você só pode editar seus próprios processos.");
+    return;
+  }
+  document.getElementById("p-id").value           = id;
+  document.getElementById("p-num").value          = p.num;
+  document.getElementById("p-parte").value        = p.parte;
+  document.getElementById("p-data-inicio").value  = p.dataInicio;
+  document.getElementById("p-dias").value         = p.dias;
+  document.getElementById("p-tipo-contagem").value= p.tipo;
+  document.getElementById("p-obs").value          = p.obs || "";
+  document.getElementById("cad-titulo").textContent = "Editar Processo";
+  document.getElementById("cad-sub").textContent   = "Altere os dados do processo";
+  window.calcularPrazo();
+  irPara("cadastro");
+};
+
+window.confirmarExcluir = (id, num) => {
+  const p = todosProcessos.find(x => x.id === id);
+  if (!p) return;
+  // Bloquear exclusão se não for dono nem admin
+  if (usuarioAtual.nivel !== "adm" && p.usuario !== usuarioAtual.id) {
+    toast("aviso", "Você só pode excluir seus próprios processos.");
+    return;
+  }
+  document.getElementById("confirmar-msg").textContent = `Deseja excluir permanentemente o processo "${num}"?`;
+  document.getElementById("btn-confirmar").onclick = async () => {
+    loading(true);
+    try {
+      await deleteDoc(doc(db, "processos", id));
+      toast("ok", "Processo excluído.");
+      fecharModal("modal-confirmar");
+      await carregarProcessos();
+    } catch(e) { toast("erro", "Erro ao excluir."); }
+    finally { loading(false); }
+  };
+  abrirModal("modal-confirmar");
+};
+
+/* ══════════════════════════
+   RENDER DASHBOARD
+══════════════════════════ */
+function renderDashboard() {
+  let total = 0, ok2 = 0, atencao = 0, critico = 0;
+  const alertas = [];
+
+  todosProcessos.forEach(p => {
+    const dr = diasRestantes(p.vencimento);
+    const sc = getStatusClass(dr);
+    total++;
+    if (sc === "normal" || sc === "verde") ok2++;
+    if (sc === "amarelo") atencao++;
+    if (sc === "vermelho" || sc === "vencido") critico++;
+    if (sc !== "normal") {
+      alertas.push({ ...p, diasRestantes: dr, statusClass: sc });
+    }
+  });
+
+  document.getElementById("stat-total").textContent   = total;
+  document.getElementById("stat-ok").textContent      = ok2;
+  document.getElementById("stat-atencao").textContent = atencao;
+  document.getElementById("stat-critico").textContent = critico;
+
+  const grid = document.getElementById("alertas-grid");
+  if (!alertas.length) {
+    grid.innerHTML = `<div class="empty-state" style="padding:30px"><i class="fas fa-check-circle" style="color:var(--green)"></i><p>Nenhum alerta no momento. Todos os prazos estão ok!</p></div>`;
+    return;
+  }
+  // Ordenar: vencidos > vermelho > amarelo > verde
+  const ordem = { vencido: 0, vermelho: 1, amarelo: 2, verde: 3 };
+  alertas.sort((a, b) => (ordem[a.statusClass] ?? 9) - (ordem[b.statusClass] ?? 9));
+  grid.innerHTML = alertas.map(p => {
+    const sc = p.statusClass;
+    const dr = p.diasRestantes;
+    const label = dr < 0 ? `Vencido há ${Math.abs(dr)} dia(s)` : dr === 0 ? "Vence HOJE!" : `Vence em ${dr} dia(s)`;
+    const corLabel = { vencido: "vermelho", vermelho: "vermelho", amarelo: "amarelo", verde: "verde" }[sc] || "verde";
+    return `<div class="alerta-item ${corLabel}">
+      <div class="alerta-dot"></div>
+      <div class="alerta-info">
+        <strong>${p.num}</strong>
+        <span>${p.parte}</span>
+      </div>
+      <span style="font-size:12px;color:var(--g500);margin-right:8px">${formatarData(p.vencimento)}</span>
+      <div class="alerta-dias">${label}</div>
+    </div>`;
+  }).join("");
+}
+
+/* ══════════════════════════
+   RENDER TABELA
+══════════════════════════ */
+function renderTabela(ctx) {
+  const tbodyId = ctx === "inicio" ? "tbody-inicio" : "tbody-consulta";
+  const pagId   = ctx === "inicio" ? "pag-inicio" : "pag-consulta";
+  const busca   = ctx === "inicio"
+    ? (document.getElementById("busca-inicio")?.value || "").toLowerCase()
+    : (document.getElementById("busca-consulta")?.value || "").toLowerCase();
+
+  let lista = [...todosProcessos];
+  if (busca) lista = lista.filter(p => p.num.toLowerCase().includes(busca) || p.parte.toLowerCase().includes(busca));
+  if (ctx === "consulta" && filtroStatusAtual !== "todos") {
+    lista = lista.filter(p => {
+      const dr = diasRestantes(p.vencimento);
+      return getStatusClass(dr) === filtroStatusAtual;
+    });
+  }
+
+  const pag  = ctx === "inicio" ? pagAtual : pagConsultaAtual;
+  const total = lista.length;
+  const totalPag = Math.ceil(total / POR_PAGINA);
+  const ini = (pag - 1) * POR_PAGINA;
+  const slice = lista.slice(ini, ini + POR_PAGINA);
+
+  const tbody = document.getElementById(tbodyId);
+  if (!slice.length) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fas fa-folder-open"></i><p>Nenhum processo encontrado.</p></div></td></tr>`;
+  } else {
+    tbody.innerHTML = slice.map(p => {
+      const dr = diasRestantes(p.vencimento);
+      const sc = getStatusClass(dr);
+      const sl = getStatusLabel(dr);
+      const badgeTipo = p.tipo === "uteis"
+        ? `<span class="badge-contagem badge-uteis"><i class="fas fa-briefcase"></i> Úteis</span>`
+        : `<span class="badge-contagem badge-corridos"><i class="fas fa-calendar"></i> Corridos</span>`;
+      return `<tr>
+        <td><span class="proc-num">${p.num}</span></td>
+        <td>${p.parte}</td>
+        <td>${formatarData(p.dataInicio)}</td>
+        <td><strong>${formatarData(p.vencimento)}</strong></td>
+        <td>${p.dias}d</td>
+        <td>${badgeTipo}</td>
+        <td><span class="status-badge status-${sc}"><span class="status-dot"></span>${sl}</span></td>
+        <td>
+          <div class="td-actions">
+            <button class="btn-icon view" title="Ver" onclick="verProcesso('${p.id}')"><i class="fas fa-eye"></i></button>
+            ${(usuarioAtual.nivel === "adm" || p.usuario === usuarioAtual.id) ? `
+            <button class="btn-icon edit" title="Editar" onclick="editarProcesso('${p.id}')"><i class="fas fa-pen"></i></button>
+            <button class="btn-icon del" title="Excluir" onclick="confirmarExcluir('${p.id}','${p.num.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i></button>
+            ` : ""}
+          </div>
+        </td>
+      </tr>`;
+    }).join("");
+  }
+
+  // Paginação
+  const pagEl = document.getElementById(pagId);
+  if (totalPag <= 1) { pagEl.innerHTML = ""; return; }
+  let html = `<button class="pag-btn" ${pag===1?"disabled":""} onclick="mudarPag('${ctx}',${pag-1})"><i class="fas fa-chevron-left"></i></button>`;
+  for (let i = 1; i <= totalPag; i++) {
+    if (i === 1 || i === totalPag || Math.abs(i - pag) <= 1)
+      html += `<button class="pag-btn ${i===pag?"ativo":""}" onclick="mudarPag('${ctx}',${i})">${i}</button>`;
+    else if (Math.abs(i - pag) === 2) html += `<span style="color:var(--g400);align-self:center">…</span>`;
+  }
+  html += `<button class="pag-btn" ${pag===totalPag?"disabled":""} onclick="mudarPag('${ctx}',${pag+1})"><i class="fas fa-chevron-right"></i></button>`;
+  pagEl.innerHTML = html;
+}
+
+window.mudarPag = (ctx, pg) => {
+  if (ctx === "inicio") pagAtual = pg;
+  else pagConsultaAtual = pg;
+  renderTabela(ctx);
+};
+
+window.filtrarTabela = () => { pagAtual = 1; renderTabela("inicio"); };
+window.filtrarConsulta = () => { pagConsultaAtual = 1; renderTabela("consulta"); };
+window.setFiltroStatus = (status, btn) => {
+  filtroStatusAtual = status;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("ativo"));
+  btn.classList.add("ativo");
+  pagConsultaAtual = 1;
+  renderTabela("consulta");
+};
+
+/* ══════════════════════════
+   CONFIGURAÇÕES
+══════════════════════════ */
+async function carregarConfig() {
+  try {
+    const snap = await getDoc(doc(db, "config", "alertas"));
+    if (snap.exists()) configAlertas = snap.data();
+  } catch(e) {}
+  document.getElementById("cfg-verde").value   = configAlertas.verde;
+  document.getElementById("cfg-amarelo").value = configAlertas.amarelo;
+  document.getElementById("cfg-vermelho").value= configAlertas.vermelho;
+}
+
+window.salvarConfig = async () => {
+  const verde    = parseInt(document.getElementById("cfg-verde").value);
+  const amarelo  = parseInt(document.getElementById("cfg-amarelo").value);
+  const vermelho = parseInt(document.getElementById("cfg-vermelho").value);
+  if (!verde || !amarelo || !vermelho) { toast("aviso", "Preencha todos os valores."); return; }
+  if (vermelho >= amarelo || amarelo >= verde) {
+    toast("aviso", "Os valores devem ser: Verde > Amarelo > Vermelho."); return;
+  }
+  loading(true);
+  try {
+    await setDoc(doc(db, "config", "alertas"), { verde, amarelo, vermelho });
+    configAlertas = { verde, amarelo, vermelho };
+    toast("ok", "Configurações salvas com sucesso.");
+    renderDashboard();
+  } catch(e) { toast("erro", "Erro ao salvar configurações."); }
+  finally { loading(false); }
+};
+
+function renderFeriadosNacionais() {
+  document.getElementById("feriados-nacionais-list").innerHTML = FERIADOS_NACIONAIS.map(f =>
+    `<div class="feriado-item"><span class="feriado-nome">${f.nome}</span><span class="feriado-data">${f.data}</span></div>`
+  ).join("");
+}
+
+async function carregarFeriadosExtra() {
+  try {
+    const snap = await getDoc(doc(db, "config", "feriados_extra"));
+    feriadosExtra = snap.exists() ? (snap.data().lista || []) : [];
+  } catch(e) { feriadosExtra = []; }
+  renderFeriadosExtra();
+}
+
+function renderFeriadosExtra() {
+  const list = document.getElementById("feriados-extra-list");
+  if (!feriadosExtra.length) {
+    list.innerHTML = `<p style="font-size:13px;color:var(--g400);padding:8px 0">Nenhum feriado estadual/municipal cadastrado.</p>`;
+    return;
+  }
+  list.innerHTML = feriadosExtra.map((f, i) =>
+    `<div class="feriado-item">
+      <span class="feriado-nome">${f.nome}</span>
+      <span class="feriado-data">${f.data}</span>
+      ${usuarioAtual?.nivel === "adm" ? `<button class="btn-del-feriado" onclick="removerFeriado(${i})"><i class="fas fa-trash"></i></button>` : ""}
+    </div>`
+  ).join("");
+}
+
+window.adicionarFeriado = async () => {
+  if (usuarioAtual?.nivel !== "adm") { toast("aviso", "Apenas administradores podem cadastrar feriados."); return; }
+  const nome = document.getElementById("novo-feriado-nome").value.trim();
+  const data = document.getElementById("novo-feriado-data").value.trim();
+  if (!nome || !data) { toast("aviso", "Preencha nome e data."); return; }
+  if (!/^\d{2}\/\d{2}$/.test(data)) { toast("aviso", "Data no formato DD/MM."); return; }
+  feriadosExtra.push({ nome, data });
+  loading(true);
+  try {
+    await setDoc(doc(db, "config", "feriados_extra"), { lista: feriadosExtra });
+    toast("ok", "Feriado adicionado.");
+    document.getElementById("novo-feriado-nome").value = "";
+    document.getElementById("novo-feriado-data").value = "";
+    renderFeriadosExtra();
+  } catch(e) { feriadosExtra.pop(); toast("erro", "Erro ao salvar."); }
+  finally { loading(false); }
+};
+
+window.removerFeriado = async (idx) => {
+  if (usuarioAtual?.nivel !== "adm") return;
+  feriadosExtra.splice(idx, 1);
+  loading(true);
+  try {
+    await setDoc(doc(db, "config", "feriados_extra"), { lista: feriadosExtra });
+    toast("ok", "Feriado removido.");
+    renderFeriadosExtra();
+  } catch(e) { toast("erro", "Erro ao remover."); }
+  finally { loading(false); }
+};
+
+/* ══════════════════════════
+   USUÁRIOS (ADM)
+══════════════════════════ */
+async function carregarUsuarios() {
+  try {
+    const snap = await getDocs(collection(db, "usuarios"));
+    const lista = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const grid = document.getElementById("users-grid");
+    if (!lista.length) {
+      grid.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>Nenhum usuário cadastrado.</p></div>`;
+      return;
+    }
+    grid.innerHTML = lista.map(u => {
+      const iniciais = u.nome.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase();
+      return `<div class="user-card">
+        <div class="user-card-avatar">${iniciais}</div>
+        <div class="user-card-info">
+          <strong>${u.nome}</strong>
+          <span>@${u.id}</span>
+        </div>
+        <span class="nivel-badge ${u.nivel === 'adm' ? 'nivel-adm' : 'nivel-user'}">${u.nivel === 'adm' ? 'ADM' : 'Usuário'}</span>
+        ${u.id !== usuarioAtual.id ? `<div class="user-card-actions"><button class="btn-icon del" title="Excluir" onclick="excluirUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button></div>` : ""}
+      </div>`;
+    }).join("");
+  } catch(e) { toast("erro", "Erro ao carregar usuários."); }
+}
+
+window.criarUsuario = async () => {
+  const nome  = document.getElementById("nu-nome").value.trim();
+  const login = document.getElementById("nu-login").value.trim().toLowerCase();
+  const senha = document.getElementById("nu-senha").value.trim();
+  const nivel = document.getElementById("nu-nivel").value;
+  if (!nome || !login || !senha) { toast("aviso", "Preencha todos os campos."); return; }
+  if (senha.length < 6) { toast("aviso", "A senha deve ter no mínimo 6 caracteres."); return; }
+  loading(true);
+  try {
+    const snap = await getDoc(doc(db, "usuarios", login));
+    if (snap.exists()) { toast("aviso", "Login já existe."); return; }
+    await setDoc(doc(db, "usuarios", login), { nome, senha, nivel });
+    toast("ok", "Usuário criado com sucesso.");
+    fecharModal("modal-novo-usuario");
+    document.getElementById("nu-nome").value = "";
+    document.getElementById("nu-login").value = "";
+    document.getElementById("nu-senha").value = "";
+    carregarUsuarios();
+  } catch(e) { toast("erro", "Erro ao criar usuário."); }
+  finally { loading(false); }
+};
+
+window.excluirUsuario = (id, nome) => {
+  document.getElementById("confirmar-msg").textContent = `Deseja excluir o usuário "${nome}"?`;
+  document.getElementById("btn-confirmar").onclick = async () => {
+    loading(true);
+    try {
+      await deleteDoc(doc(db, "usuarios", id));
+      toast("ok", "Usuário excluído.");
+      fecharModal("modal-confirmar");
+      carregarUsuarios();
+    } catch(e) { toast("erro", "Erro ao excluir."); }
+    finally { loading(false); }
+  };
+  abrirModal("modal-confirmar");
+};
+
+/* ══════════════════════════
+   CRIAR ADM PADRÃO (1ª VEZ)
+   Acesse: ?setup=1 na URL
+══════════════════════════ */
+async function setupInicial() {
+  if (!window.location.search.includes("setup=1")) return;
+  try {
+    const snap = await getDoc(doc(db, "usuarios", "admin"));
+    if (snap.exists()) { alert("Admin já existe!"); return; }
+    await setDoc(doc(db, "usuarios", "admin"), { nome: "Administrador", senha: "admin123", nivel: "adm" });
+    alert("✅ Usuário criado!\nLogin: admin\nSenha: admin123\n\nRemova ?setup=1 da URL.");
+  } catch(e) { alert("Erro: " + e.message); }
+}
+setupInicial();
+
+/* ══════════════════════════
+   MODAIS — FECHAR
+══════════════════════════ */
+document.querySelectorAll(".modal-overlay").forEach(overlay => {
+  overlay.addEventListener("click", e => { if (e.target === overlay) overlay.classList.add("hidden"); });
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape")
+    document.querySelectorAll(".modal-overlay:not(.hidden)").forEach(m => m.classList.add("hidden"));
+});
+
+/* ══════════════════════════
+   CALCULADORA DE PRAZOS
+══════════════════════════ */
+const DIAS_SEMANA = ["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
+
+function renderCalcFeriados() {
+  const lista = document.getElementById("calc-feriados-lista");
+  if (!lista) return;
+  // Nacionais fixos
+  const nacionais = [
+    { nome: "Confraternização Universal", data: "01/01" },
+    { nome: "Tiradentes", data: "21/04" },
+    { nome: "Dia do Trabalho", data: "01/05" },
+    { nome: "Independência do Brasil", data: "07/09" },
+    { nome: "Nossa Sra. Aparecida", data: "12/10" },
+    { nome: "Finados", data: "02/11" },
+    { nome: "Proclamação da República", data: "15/11" },
+    { nome: "Dia da Consciência Negra", data: "20/11" },
+    { nome: "Natal", data: "25/12" },
+    { nome: "Páscoa (variável)", data: "—" },
+    { nome: "Carnaval (variável)", data: "—" },
+    { nome: "Corpus Christi (variável)", data: "—" },
+  ];
+  const todos = [...nacionais, ...feriadosExtra.map(f => ({ nome: f.nome, data: f.data, extra: true }))];
+  lista.innerHTML = todos.map(f =>
+    `<span style="display:inline-flex;align-items:center;gap:6px;background:${f.extra ? '#EFF6FF' : '#F1F5F9'};border:1px solid ${f.extra ? '#BFDBFE' : '#E2E8F0'};border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:${f.extra ? 'var(--primary)' : 'var(--g600)'}">
+      <i class="fas fa-calendar-xmark" style="font-size:10px"></i>${f.nome}${f.data && f.data !== '—' ? ' (' + f.data + ')' : ''}
+    </span>`
+  ).join("");
+}
+
+window.calcularPrazoCalc = () => {
+  const dataInicio = document.getElementById("calc-data-inicio").value;
+  const diasUteis   = parseInt(document.getElementById("calc-dias-uteis").value) || 0;
+  const diasCorridos= parseInt(document.getElementById("calc-dias-corridos").value) || 0;
+
+  const resUteis    = document.getElementById("calc-res-uteis");
+  const resCorridos = document.getElementById("calc-res-corridos");
+  const empty       = document.getElementById("calc-empty");
+
+  if (!dataInicio || (diasUteis <= 0 && diasCorridos <= 0)) {
+    resUteis.classList.add("hidden");
+    resCorridos.classList.add("hidden");
+    empty.classList.remove("hidden");
+    return;
+  }
+  empty.classList.add("hidden");
+
+  // Resultado dias úteis
+  if (diasUteis > 0) {
+    const vencUteis = calcularVencimento(dataInicio, diasUteis, "uteis");
+    const dtUteis = dataParaObj(vencUteis);
+    document.getElementById("calc-res-uteis-data").textContent = formatarData(vencUteis);
+    document.getElementById("calc-res-uteis-qtd").textContent = diasUteis + " dias úteis";
+    document.getElementById("calc-res-uteis-diaSemana").textContent = DIAS_SEMANA[dtUteis.getDay()];
+    // Feriados no período
+    const feriadosPeriodo = listarFeriadosPeriodo(dataInicio, vencUteis);
+    const ferEl = document.getElementById("calc-res-uteis-feriados");
+    if (feriadosPeriodo.length > 0) {
+      ferEl.innerHTML = `<div style="font-size:11px;color:var(--g500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Feriados no período (${feriadosPeriodo.length})</div>` +
+        feriadosPeriodo.map(f => `<div style="font-size:12px;color:var(--g600);padding:2px 0">• ${f}</div>`).join("");
+    } else {
+      ferEl.innerHTML = `<div style="font-size:12px;color:var(--green);font-weight:600"><i class="fas fa-check"></i> Nenhum feriado no período</div>`;
+    }
+    resUteis.classList.remove("hidden");
+  } else {
+    resUteis.classList.add("hidden");
+  }
+
+  // Resultado dias corridos
+  if (diasCorridos > 0) {
+    const vencCorridos = calcularVencimento(dataInicio, diasCorridos, "corridos");
+    const dtCorridos = dataParaObj(vencCorridos);
+    document.getElementById("calc-res-corridos-data").textContent = formatarData(vencCorridos);
+    document.getElementById("calc-res-corridos-qtd").textContent = diasCorridos + " dias corridos";
+    document.getElementById("calc-res-corridos-diaSemana").textContent = DIAS_SEMANA[dtCorridos.getDay()];
+    resCorridos.classList.remove("hidden");
+  } else {
+    resCorridos.classList.add("hidden");
+  }
+};
+
+function listarFeriadosPeriodo(dataIni, dataFim) {
+  const ini = dataParaObj(dataIni);
+  const fim = dataParaObj(dataFim);
+  const resultado = [];
+  const anos = new Set();
+  let cur = new Date(ini); cur.setDate(cur.getDate() + 1);
+  while (cur <= fim) { anos.add(cur.getFullYear()); cur.setDate(cur.getDate() + 1); }
+  const allFeriados = {};
+  anos.forEach(ano => {
+    const set = getFeriadosAno(ano);
+    set.forEach(k => { allFeriados[k] = true; });
+  });
+  cur = new Date(ini); cur.setDate(cur.getDate() + 1);
+  while (cur <= fim) {
+    const key = objParaStr(cur);
+    if (allFeriados[key]) {
+      resultado.push(formatarData(key) + " (" + DIAS_SEMANA[cur.getDay()] + ")");
+    }
+    cur.setDate(cur.getDate() + 1);
+  }
+  return resultado;
+}
+
+</script>
+</body>
+</html>
