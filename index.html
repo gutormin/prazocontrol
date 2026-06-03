@@ -5,34 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PrazoControl | Controle de Prazos Processuais</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
     :root {
-      --primary: #1a56db;
-      --primary-d: #1241b3;
-      --primary-l: #EBF2FF;
-      --green: #059669;
-      --green-l: #ECFDF5;
-      --amber: #D97706;
-      --amber-l: #FFFBEB;
-      --red: #DC2626;
-      --red-l: #FEF2F2;
-      --g50: #F8FAFC; --g100: #F1F5F9; --g200: #E2E8F0; --g300: #CBD5E1;
-      --g400: #94A3B8; --g500: #64748B; --g600: #475569; --g700: #334155;
-      --g800: #1E293B; --g900: #0F172A;
-      --radius: 14px; --radius-sm: 9px; --radius-xs: 6px;
-      --shadow: 0 1px 6px rgba(0,0,0,.06);
-      --shadow-md: 0 4px 16px rgba(0,0,0,.10);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,.14);
-      --trans: .2s ease;
-      --font-display: 'Inter', sans-serif;
-      --font: 'Inter', sans-serif;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --dark-red: #991b1b;
+      
+      /* Cores de Fundo e Texto (Light Mode) */
+      --bg-app: #f8fafc;
+      --bg-sidebar: #0f172a;
+      --bg-card: #ffffff;
+      --bg-hover: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --border: #e2e8f0;
+      
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --radius-xs: 5px;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      
+      --trans: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --font: 'Outfit', sans-serif;
     }
+
+    body.dark-mode {
+      /* Cores de Fundo e Texto (Dark Mode) */
+      --bg-app: #090d16;
+      --bg-sidebar: #030712;
+      --bg-card: #111827;
+      --bg-hover: #1f2937;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --text-light: #6b7280;
+      --border: #374151;
+      
+      --primary-light: rgba(37, 99, 235, 0.15);
+      --success-light: rgba(16, 185, 129, 0.15);
+      --warning-light: rgba(245, 158, 11, 0.15);
+      --danger-light: rgba(239, 68, 68, 0.15);
+    }
+
     html { scroll-behavior: smooth; }
-    body { font-family: var(--font); background: #EEF2F7; color: var(--g800); line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; }
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-thumb { background: var(--g300); border-radius: 3px; }
+    body { 
+      font-family: var(--font); 
+      background: var(--bg-app); 
+      color: var(--text-main); 
+      line-height: 1.6; 
+      -webkit-font-smoothing: antialiased; 
+      min-height: 100vh;
+      transition: background-color var(--trans), color var(--trans);
+    }
+    
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-app); }
+    ::-webkit-scrollbar-thumb { background: var(--text-light); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    
     .hidden { display: none !important; }
 
     /* ═══════════════════════════════
@@ -40,565 +84,685 @@
     ═══════════════════════════════ */
     #tela-login {
       min-height: 100vh;
-      background: linear-gradient(135deg, #0F172A 0%, #1a2f5a 50%, #1a56db 100%);
+      background: linear-gradient(135deg, #020617 0%, #0f172a 40%, #1e3a8a 100%);
       display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden;
     }
     #tela-login::before {
       content: '';
       position: absolute; inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M40 0L80 40L40 80L0 40z'/%3E%3C/g%3E%3C/svg%3E");
+      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M40 0L80 40L40 80L0 40z'/%3E%3C/g%3E%3C/svg%3E");
     }
     .login-box {
-      background: white;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 24px;
       padding: 48px 44px;
-      width: 420px;
-      box-shadow: var(--shadow-lg);
+      width: 440px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
       position: relative; z-index: 1;
+      color: white;
     }
     .login-logo {
-      width: 52px; height: 52px;
+      width: 56px; height: 56px;
       background: linear-gradient(135deg, var(--primary), #3b82f6);
-      border-radius: 14px;
+      border-radius: 16px;
       display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 22px; margin-bottom: 24px;
+      color: white; font-size: 24px; margin-bottom: 24px;
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
     }
     .login-box h1 {
-      font-family: var(--font-display);
-      font-size: 26px; font-weight: 800;
-      color: var(--g900); margin-bottom: 4px;
+      font-size: 28px; font-weight: 800;
+      margin-bottom: 6px; letter-spacing: -0.5px;
     }
-    .login-box p { color: var(--g500); font-size: 14px; margin-bottom: 32px; }
-    .fgroup { margin-bottom: 18px; }
-    .fgroup label { display: block; font-size: 13px; font-weight: 600; color: var(--g700); margin-bottom: 7px; }
-    .fgroup input {
+    .login-box p { color: rgba(255, 255, 255, 0.6); font-size: 14px; margin-bottom: 32px; }
+    .fgroup { margin-bottom: 20px; }
+    .fgroup label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 7px; color: rgba(255, 255, 255, 0.8); }
+    body:not(.dark-mode) .fgroup label.light-lbl { color: var(--text-muted); }
+    .fgroup input, .fgroup select, .fgroup textarea {
       width: 100%; padding: 12px 14px;
-      border: 1.5px solid var(--g200);
-      border-radius: var(--radius-sm);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
       font-size: 14px; font-family: var(--font);
-      color: var(--g800); outline: none;
-      transition: border-color var(--trans), box-shadow var(--trans);
+      color: white; outline: none;
+      transition: var(--trans);
     }
-    .fgroup input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,86,219,.12); }
+    .fgroup input:focus, .fgroup select:focus, .fgroup textarea:focus { 
+      border-color: var(--primary); 
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25); 
+    }
     .btn-login {
-      width: 100%; padding: 13px;
+      width: 100%; padding: 14px;
       background: linear-gradient(135deg, var(--primary), #3b82f6);
-      color: white; border: none; border-radius: var(--radius-sm);
+      color: white; border: none; border-radius: var(--radius-md);
       font-size: 15px; font-weight: 700; font-family: var(--font);
-      cursor: pointer; transition: opacity var(--trans), transform var(--trans);
+      cursor: pointer; transition: var(--trans);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
     }
-    .btn-login:hover { opacity: .92; transform: translateY(-1px); }
-    .login-err { color: var(--red); font-size: 13px; text-align: center; margin-top: 12px; min-height: 20px; }
+    .btn-login:hover { opacity: .92; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35); }
+    .login-err { color: #f87171; font-size: 13px; text-align: center; margin-top: 14px; min-height: 20px; }
 
     /* ═══════════════════════════════
-       TOPBAR
+       CONTAINER DA APLICAÇÃO (LAYOUT COM SIDEBAR)
     ═══════════════════════════════ */
-    .topbar {
-      position: fixed; top: 0; left: 0; right: 0; height: 62px;
-      background: #0F172A;
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+      background-color: var(--bg-app);
+      transition: var(--trans);
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background-color: var(--bg-sidebar);
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      z-index: 100;
+      transition: var(--trans);
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    }
+    .sidebar.collapsed { width: 78px; }
+    
+    .sidebar-header {
+      height: 70px;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 28px; z-index: 100;
-      box-shadow: 0 2px 12px rgba(0,0,0,.3);
-    }
-    .topbar-brand { display: flex; align-items: center; gap: 11px; }
-    .topbar-logo {
-      width: 38px; height: 38px;
-      background: linear-gradient(135deg, var(--primary), #3b82f6);
-      border-radius: 10px; display: flex; align-items: center;
-      justify-content: center; color: white; font-size: 16px;
-    }
-    .topbar-brand-text strong { color: white; font-size: 15px; font-weight: 800; font-family: var(--font-display); display: block; }
-    .topbar-brand-text span { color: rgba(255,255,255,.35); font-size: 11px; }
-    .topbar-nav { display: flex; gap: 6px; }
-    .topbar-btn {
-      display: flex; align-items: center; gap: 7px;
-      padding: 7px 14px; border-radius: 8px;
-      font-size: 13px; font-weight: 600; font-family: var(--font);
-      cursor: pointer; border: none; transition: all var(--trans);
-      color: rgba(255,255,255,.6); background: transparent;
-    }
-    .topbar-btn:hover { background: rgba(255,255,255,.1); color: white; }
-    .topbar-btn.ativo { background: rgba(255,255,255,.15); color: white; }
-    .topbar-right { display: flex; align-items: center; gap: 12px; }
-    .user-badge {
-      display: flex; align-items: center; gap: 8px;
-      color: rgba(255,255,255,.7); font-size: 13px;
-    }
-    .user-avatar {
-      width: 32px; height: 32px;
-      background: linear-gradient(135deg, var(--primary), #60a5fa);
-      border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; color: white; font-size: 12px; font-weight: 700;
-    }
-    .btn-logout {
-      padding: 6px 13px; border-radius: 7px;
-      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.1);
-      color: rgba(255,255,255,.6); font-size: 12px; font-weight: 600;
-      font-family: var(--font); cursor: pointer; transition: all var(--trans);
-    }
-    .btn-logout:hover { background: rgba(255,255,255,.15); color: white; }
-    .admin-badge {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: white; font-size: 10px; font-weight: 700;
-      padding: 2px 8px; border-radius: 20px; text-transform: uppercase;
-      letter-spacing: .5px;
-    }
-
-    /* ═══════════════════════════════
-       APP WRAPPER
-    ═══════════════════════════════ */
-    .app-wrap { padding-top: 62px; min-height: 100vh; }
-    .tela { display: none; padding: 32px; min-height: calc(100vh - 62px); }
-    .tela.ativa { display: block; }
-
-    /* ═══════════════════════════════
-       DASHBOARD (INÍCIO)
-    ═══════════════════════════════ */
-    .dash-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 28px; flex-wrap: wrap; gap: 14px;
-    }
-    .dash-header-left h2 {
-      font-family: var(--font-display);
-      font-size: 24px; font-weight: 800; color: var(--g900);
-    }
-    .dash-header-left p { color: var(--g500); font-size: 13px; }
-    .dash-stats {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
-      margin-bottom: 28px;
-    }
-    @media(max-width: 900px) { .dash-stats { grid-template-columns: repeat(2, 1fr); } }
-    .stat-card {
-      background: white; border-radius: var(--radius); padding: 22px 20px;
-      box-shadow: var(--shadow); border: 1px solid var(--g100);
-      display: flex; align-items: center; gap: 16px;
-    }
-    .stat-ico {
-      width: 48px; height: 48px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center; font-size: 20px;
-      flex-shrink: 0;
-    }
-    .stat-ico.blue  { background: var(--primary-l); color: var(--primary); }
-    .stat-ico.green { background: var(--green-l); color: var(--green); }
-    .stat-ico.amber { background: var(--amber-l); color: var(--amber); }
-    .stat-ico.red   { background: var(--red-l); color: var(--red); }
-    .stat-info strong { font-size: 28px; font-weight: 800; font-family: var(--font-display); color: var(--g900); display: block; line-height: 1; }
-    .stat-info span { font-size: 12px; color: var(--g500); font-weight: 500; }
-
-    /* ═══════════════════════════════
-       ALERTAS PISCANDO
-    ═══════════════════════════════ */
-    .alertas-section { margin-bottom: 28px; }
-    .alertas-titulo {
-      font-family: var(--font-display);
-      font-size: 16px; font-weight: 700; color: var(--g800);
-      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
-    }
-    .alertas-grid { display: flex; flex-direction: column; gap: 8px; }
-    .alerta-item {
-      display: flex; align-items: center; gap: 14px;
-      background: white; border-radius: 10px;
-      padding: 14px 18px; border-left: 4px solid;
-      box-shadow: var(--shadow);
-      animation: piscar 1.5s ease-in-out infinite;
-    }
-    .alerta-item.verde  { border-color: var(--green); }
-    .alerta-item.amarelo { border-color: var(--amber); }
-    .alerta-item.vermelho { border-color: var(--red); }
-    .alerta-item.vencido {
-      border-color: #991b1b;
-      animation: piscar-vencido 1.2s ease-in-out infinite;
-    }
-    .vencido .alerta-dot { background: #991b1b; }
-    @keyframes piscar {
-      0%, 100% { opacity: 1; }
-      50% { opacity: .6; }
-    }
-    @keyframes piscar-vencido {
-      0%, 100% { opacity: 1; background: #FEF2F2; border-color: #DC2626; }
-      50%       { opacity: .85; background: #fcd6d6; border-color: #991b1b; }
-    }
-    .alerta-dot {
-      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-    }
-    .verde .alerta-dot  { background: var(--green); }
-    .amarelo .alerta-dot { background: var(--amber); }
-    .vermelho .alerta-dot { background: var(--red); }
-
-    /* Separador de seção nos alertas */
-    .alertas-separador {
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .7px; color: var(--g400);
-      padding: 6px 4px 2px; display: flex; align-items: center; gap: 8px;
-    }
-    .alertas-separador::after {
-      content: ''; flex: 1; height: 1px; background: var(--g200);
-    }
-
-    /* Botão copiar número do processo */
-    .btn-copiar-num {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 22px; height: 22px; border-radius: 5px;
-      background: var(--primary-l); color: var(--primary);
-      border: none; cursor: pointer; font-size: 11px;
-      transition: all var(--trans); vertical-align: middle;
-      margin-left: 5px; flex-shrink: 0;
-    }
-    .btn-copiar-num:hover { background: var(--primary); color: white; }
-    .btn-copiar-num.copiado { background: var(--green-l); color: var(--green); }
-    .alerta-info { flex: 1; }
-    .alerta-info strong { font-size: 14px; font-weight: 700; color: var(--g800); display: block; }
-    .alerta-info span { font-size: 12px; color: var(--g500); }
-    .alerta-dias {
-      font-family: var(--font-display);
-      font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
-    }
-    .verde .alerta-dias  { background: var(--green-l); color: var(--green); }
-    .amarelo .alerta-dias { background: var(--amber-l); color: var(--amber); }
-    .vermelho .alerta-dias { background: var(--red-l); color: var(--red); }
-
-    /* ═══════════════════════════════
-       TABELA DE PROCESSOS
-    ═══════════════════════════════ */
-    .table-card {
-      background: white; border-radius: var(--radius);
-      box-shadow: var(--shadow); border: 1px solid var(--g100);
+      padding: 0 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       overflow: hidden;
     }
+    .sidebar.collapsed .sidebar-header { padding: 0; justify-content: center; }
+    
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .sidebar.collapsed .logo-area span { display: none; }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: white; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .logo-text { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; white-space: nowrap; }
+    
+    .btn-toggle-sidebar {
+      background: transparent; border: none; color: rgba(255, 255, 255, 0.6);
+      cursor: pointer; width: 28px; height: 28px; border-radius: var(--radius-xs);
+      display: flex; align-items: center; justify-content: center; transition: var(--trans);
+    }
+    .btn-toggle-sidebar:hover { background: rgba(255, 255, 255, 0.08); color: white; }
+    .sidebar.collapsed .btn-toggle-sidebar { display: none; }
+
+    .sidebar-nav {
+      flex: 1; padding: 20px 10px;
+      display: flex; flex-direction: column; gap: 6px;
+      overflow-y: auto;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px; border-radius: var(--radius-md);
+      color: rgba(255, 255, 255, 0.65); background: transparent;
+      border: none; cursor: pointer; width: 100%; text-align: left;
+      font-size: 14px; font-weight: 600; font-family: var(--font);
+      transition: var(--trans);
+    }
+    .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
+    .nav-item.ativo {
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .sidebar.collapsed .nav-item { justify-content: center; padding: 12px 0; }
+    .sidebar.collapsed .nav-item span { display: none; }
+
+    .sidebar-footer {
+      padding: 20px 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .sidebar.collapsed .sidebar-footer { padding: 16px 5px; align-items: center; }
+
+    .theme-toggle-area {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      color: rgba(255, 255, 255, 0.5); font-size: 13px;
+    }
+    .sidebar.collapsed .theme-toggle-area { flex-direction: column; gap: 8px; }
+    
+    .switch { position: relative; display: inline-block; width: 42px; height: 22px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; inset: 0;
+      background-color: rgba(255, 255, 255, 0.2);
+      transition: .4s; border-radius: 22px;
+    }
+    .slider:before {
+      position: absolute; content: "";
+      height: 16px; width: 16px; left: 3px; bottom: 3px;
+      background-color: white; transition: .4s; border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(20px); }
+
+    .user-profile {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 10px; border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .sidebar.collapsed .user-profile { background: transparent; padding: 0; flex-direction: column; }
+    
+    .user-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #60a5fa);
+      color: white; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px; flex-shrink: 0;
+    }
+    .user-info { display: flex; flex-direction: column; flex-grow: 1; min-width: 0; }
+    .sidebar.collapsed .user-info { display: none; }
+    .user-name { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: 11px; color: rgba(255, 255, 255, 0.4); text-transform: uppercase; font-weight: 600; }
+    
+    .btn-logout {
+      background: transparent; border: none; color: rgba(255, 255, 255, 0.4);
+      cursor: pointer; padding: 6px; border-radius: var(--radius-xs);
+      transition: var(--trans);
+    }
+    .btn-logout:hover { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+    .sidebar.collapsed .btn-logout { margin-top: 8px; }
+
+    /* CONTEÚDO PRINCIPAL */
+    .main-content {
+      flex: 1;
+      margin-left: 260px;
+      padding: 32px;
+      transition: var(--trans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar.collapsed ~ .main-content { margin-left: 78px; }
+
+    .content-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px; padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-title-wrap h1 {
+      font-size: 24px; font-weight: 800; color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+    .page-title-wrap p { font-size: 13px; color: var(--text-muted); }
+    
+    .btn-menu-mobile {
+      display: none; background: transparent; border: none;
+      color: var(--text-main); font-size: 20px; cursor: pointer;
+      padding: 8px; border-radius: var(--radius-sm);
+    }
+
+    @media(max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.mobile-open { transform: translateX(0); width: 260px; }
+      .main-content, .sidebar.collapsed ~ .main-content { margin-left: 0; padding: 20px; }
+      .btn-menu-mobile { display: flex; align-items: center; justify-content: center; }
+    }
+
+    /* ═══════════════════════════════
+       TELA INÍCIO E RESUMO
+    ═══════════════════════════════ */
+    .dash-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+      margin-bottom: 32px;
+    }
+    @media(max-width: 1024px) { .dash-stats { grid-template-columns: repeat(2, 1fr); } }
+    @media(max-width: 640px) { .dash-stats { grid-template-columns: 1fr; } }
+    
+    .stat-card {
+      background: var(--bg-card); border-radius: var(--radius-lg); padding: 24px;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+      display: flex; align-items: center; gap: 20px;
+      transition: transform var(--trans), box-shadow var(--trans);
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    
+    .stat-ico {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+      flex-shrink: 0;
+    }
+    .stat-ico.blue  { background: var(--primary-light); color: var(--primary); }
+    .stat-ico.green { background: var(--success-light); color: var(--success); }
+    .stat-ico.amber { background: var(--warning-light); color: var(--warning); }
+    .stat-ico.red   { background: var(--danger-light); color: var(--danger); }
+    .stat-info strong { font-size: 28px; font-weight: 800; color: var(--text-main); display: block; line-height: 1.1; }
+    .stat-info span { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+    /* ALERTAS PISCANDO */
+    .alertas-section { margin-bottom: 32px; }
+    .alertas-titulo {
+      font-size: 16px; font-weight: 700; color: var(--text-main);
+      margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .alertas-grid { display: flex; flex-direction: column; gap: 10px; }
+    
+    .alerta-item {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--bg-card); border-radius: var(--radius-md);
+      padding: 16px 20px; border-left: 4px solid;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      border-left-width: 4px;
+      animation: piscar 2s ease-in-out infinite;
+      transition: transform var(--trans);
+    }
+    .alerta-item.verde   { border-left-color: var(--success); }
+    .alerta-item.amarelo { border-left-color: var(--warning); }
+    .alerta-item.vermelho{ border-left-color: var(--danger); }
+    .alerta-item.vencido {
+      border-left-color: var(--dark-red);
+      animation: piscar-vencido 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes piscar {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(0.995); }
+    }
+    @keyframes piscar-vencido {
+      0%, 100% { 
+        background-color: var(--danger-light); 
+        border-color: var(--danger);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.1);
+      }
+      50% { 
+        background-color: #fca5a5; 
+        border-color: var(--dark-red);
+        box-shadow: 0 0 10px 1px rgba(239, 68, 68, 0.25);
+      }
+    }
+    
+    .alerta-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .verde .alerta-dot   { background: var(--success); }
+    .amarelo .alerta-dot { background: var(--warning); }
+    .vermelho .alerta-dot{ background: var(--danger); }
+    .vencido .alerta-dot { background: var(--dark-red); }
+
+    .alertas-separador {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--text-light);
+      padding: 8px 4px 4px; display: flex; align-items: center; gap: 8px;
+    }
+    .alertas-separador::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .btn-copiar-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 6px;
+      background: var(--primary-light); color: var(--primary);
+      border: none; cursor: pointer; font-size: 11px;
+      transition: var(--trans); vertical-align: middle;
+      margin-left: 6px; flex-shrink: 0;
+    }
+    .btn-copiar-num:hover { background: var(--primary); color: white; }
+    .btn-copiar-num.copiado { background: var(--success-light); color: var(--success); }
+    
+    .alerta-info { flex: 1; }
+    .alerta-info strong { font-size: 14px; font-weight: 700; color: var(--text-main); display: inline-flex; align-items: center; }
+    .alerta-info span { font-size: 13px; color: var(--text-muted); display: block; margin-top: 2px; }
+    .alerta-dias {
+      font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+    }
+    .verde .alerta-dias   { background: var(--success-light); color: var(--success); }
+    .amarelo .alerta-dias { background: var(--warning-light); color: var(--warning); }
+    .vermelho .alerta-dias{ background: var(--danger-light); color: var(--danger); }
+    .vencido .alerta-dias { background: #fce7e7; color: #991b1b; }
+
+    /* ═══════════════════════════════
+       CARDS E TABELAS
+    ═══════════════════════════════ */
+    .table-card {
+      background: var(--bg-card); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+      overflow: hidden; margin-top: 10px;
+    }
     .table-header {
-      padding: 18px 22px; border-bottom: 1px solid var(--g100);
-      display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      padding: 20px 24px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
     }
-    .table-header h3 {
-      font-family: var(--font-display);
-      font-size: 15px; font-weight: 700; color: var(--g800);
-    }
+    .table-header h3 { font-size: 16px; font-weight: 700; color: var(--text-main); }
+    
     .search-wrap {
-      display: flex; align-items: center; gap: 8px;
-      background: var(--g50); border: 1.5px solid var(--g200);
-      border-radius: var(--radius-sm); padding: 8px 14px; min-width: 260px;
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-app); border: 1.5px solid var(--border);
+      border-radius: var(--radius-md); padding: 8px 16px; min-width: 280px;
+      transition: var(--trans);
     }
-    .search-wrap i { color: var(--g400); font-size: 13px; }
+    .search-wrap:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+    .search-wrap i { color: var(--text-light); font-size: 13px; }
     .search-wrap input {
       border: none; background: transparent; font-size: 13px;
-      font-family: var(--font); color: var(--g800); outline: none; flex: 1;
+      font-family: var(--font); color: var(--text-main); outline: none; flex: 1;
     }
-    .filter-btns { display: flex; gap: 6px; }
+    
+    .filter-btns { display: flex; gap: 6px; flex-wrap: wrap; }
     .filter-btn {
-      padding: 7px 14px; border-radius: 7px;
-      font-size: 12px; font-weight: 600; font-family: var(--font);
-      cursor: pointer; border: 1.5px solid var(--g200);
-      background: white; color: var(--g600); transition: all var(--trans);
+      padding: 8px 16px; border-radius: var(--radius-md);
+      font-size: 13px; font-weight: 600; font-family: var(--font);
+      cursor: pointer; border: 1.5px solid var(--border);
+      background: var(--bg-card); color: var(--text-muted); transition: var(--trans);
     }
     .filter-btn:hover, .filter-btn.ativo { background: var(--primary); color: white; border-color: var(--primary); }
+    
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
     thead th {
-      padding: 12px 16px; text-align: left;
+      padding: 14px 20px; text-align: left;
       font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .5px; color: var(--g500);
-      background: var(--g50); border-bottom: 1px solid var(--g100);
+      letter-spacing: .6px; color: var(--text-muted);
+      background: var(--bg-app); border-bottom: 1px solid var(--border);
     }
     tbody tr {
-      border-bottom: 1px solid var(--g100);
+      border-bottom: 1px solid var(--border);
       transition: background var(--trans);
     }
-    tbody tr:hover { background: var(--g50); }
+    tbody tr:hover { background: var(--bg-hover); }
     tbody tr:last-child { border-bottom: none; }
-    td { padding: 13px 16px; font-size: 13px; color: var(--g700); }
-    .proc-num {
-      font-family: var(--font-display);
-      font-weight: 700; color: var(--primary); font-size: 13px;
-    }
+    td { padding: 14px 20px; font-size: 13px; color: var(--text-main); }
+    
+    .proc-num { font-weight: 700; color: var(--primary); font-size: 13px; }
+    
     .badge-contagem {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
     }
-    .badge-uteis { background: #EFF6FF; color: #1a56db; }
-    .badge-corridos { background: #F5F3FF; color: #7c3aed; }
+    .badge-uteis { background: var(--primary-light); color: var(--primary); }
+    .badge-corridos { background: rgba(124, 58, 237, 0.15); color: #7c3aed; }
+    
     .status-badge {
-      display: inline-flex; align-items: center; gap: 5px;
+      display: inline-flex; align-items: center; gap: 6px;
       padding: 4px 12px; border-radius: 20px;
       font-size: 12px; font-weight: 600;
-      animation: piscar 1.5s ease-in-out infinite;
     }
-    .status-verde   { background: var(--green-l); color: var(--green); }
-    .status-amarelo { background: var(--amber-l); color: var(--amber); }
-    .status-vermelho{ background: var(--red-l); color: var(--red); }
+    .status-verde   { background: var(--success-light); color: var(--success); }
+    .status-amarelo { background: var(--warning-light); color: var(--warning); }
+    .status-vermelho{ background: var(--danger-light); color: var(--danger); }
     .status-vencido { background: #fce7e7; color: #991b1b; }
-    .status-normal  { background: var(--g100); color: var(--g600); animation: none; }
-    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .status-normal  { background: var(--border); color: var(--text-muted); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    
     .td-actions { display: flex; gap: 6px; }
     .btn-icon {
-      width: 32px; height: 32px; border-radius: 7px;
+      width: 32px; height: 32px; border-radius: 8px;
       border: none; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; font-size: 13px; transition: all var(--trans);
+      justify-content: center; font-size: 13px; transition: var(--trans);
     }
-    .btn-icon.view { background: var(--primary-l); color: var(--primary); }
-    .btn-icon.edit { background: var(--amber-l); color: var(--amber); }
-    .btn-icon.del  { background: var(--red-l); color: var(--red); }
+    .btn-icon.view { background: var(--primary-light); color: var(--primary); }
+    .btn-icon.edit { background: var(--warning-light); color: var(--warning); }
+    .btn-icon.del  { background: var(--danger-light); color: var(--danger); }
     .btn-icon:hover { filter: brightness(.92); transform: scale(1.05); }
-    .empty-state {
-      text-align: center; padding: 60px 20px; color: var(--g400);
-    }
+    
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); }
     .empty-state i { font-size: 40px; margin-bottom: 14px; display: block; }
-    .empty-state p { font-size: 14px; }
+    .empty-state p { font-size: 14px; color: var(--text-muted); }
+
+    /* TIMELINE DE PROGRESSO */
+    .timeline-container {
+      width: 100%; height: 6px; background: var(--border);
+      border-radius: 4px; overflow: hidden; margin-top: 4px;
+    }
+    .timeline-bar {
+      height: 100%; border-radius: 4px; transition: width 0.5s ease;
+    }
+    .timeline-bar.verde   { background: var(--success); }
+    .timeline-bar.amarelo { background: var(--warning); }
+    .timeline-bar.vermelho{ background: var(--danger); }
+    .timeline-bar.vencido { background: var(--dark-red); width: 100% !important; }
 
     /* ═══════════════════════════════
-       TELA CADASTRO
+       TELA CADASTRO / FORMULÁRIO
     ═══════════════════════════════ */
-    .tela-header {
-      display: flex; align-items: center; gap: 16px; margin-bottom: 28px;
-    }
+    .tela-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
     .btn-voltar {
       width: 40px; height: 40px; border-radius: 10px;
-      background: white; border: 1.5px solid var(--g200);
+      background: var(--bg-card); border: 1.5px solid var(--border);
       cursor: pointer; display: flex; align-items: center;
-      justify-content: center; color: var(--g600); font-size: 15px;
-      transition: all var(--trans);
+      justify-content: center; color: var(--text-muted); font-size: 15px;
+      transition: var(--trans);
     }
-    .btn-voltar:hover { background: var(--g100); }
-    .tela-titulo h2 {
-      font-family: var(--font-display);
-      font-size: 22px; font-weight: 800; color: var(--g900);
-    }
-    .tela-titulo p { color: var(--g500); font-size: 13px; }
+    .btn-voltar:hover { background: var(--bg-hover); color: var(--text-main); }
+    
     .form-card {
-      background: white; border-radius: var(--radius);
-      padding: 32px; box-shadow: var(--shadow);
-      border: 1px solid var(--g100); max-width: 780px;
+      background: var(--bg-card); border-radius: var(--radius-lg);
+      padding: 32px; box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border); max-width: 800px;
     }
     .form-section { margin-bottom: 28px; }
     .form-section-title {
       font-size: 13px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .6px; color: var(--g500); margin-bottom: 16px;
-      padding-bottom: 10px; border-bottom: 1px solid var(--g100);
+      letter-spacing: .8px; color: var(--text-muted); margin-bottom: 20px;
+      padding-bottom: 10px; border-bottom: 1px solid var(--border);
       display: flex; align-items: center; gap: 8px;
     }
-    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
     @media(max-width: 640px) {
       .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
     }
     .fgroup-full { grid-column: 1 / -1; }
-    .fgroup label { display: block; font-size: 13px; font-weight: 600; color: var(--g700); margin-bottom: 7px; }
-    .req { color: var(--red); }
-    .fgroup input, .fgroup select, .fgroup textarea {
-      width: 100%; padding: 11px 13px;
-      border: 1.5px solid var(--g200); border-radius: var(--radius-sm);
-      font-size: 14px; font-family: var(--font);
-      color: var(--g800); outline: none;
-      transition: border-color var(--trans), box-shadow var(--trans);
-      background: white;
-    }
-    .fgroup input:focus, .fgroup select:focus, .fgroup textarea:focus {
-      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,86,219,.10);
-    }
-    .fgroup textarea { resize: vertical; min-height: 90px; }
-    .field-err { font-size: 12px; color: var(--red); display: block; margin-top: 4px; }
+    .req { color: var(--danger); margin-left: 2px; }
+    
+    .field-err { font-size: 12px; color: var(--danger); display: block; margin-top: 4px; }
     .form-actions { display: flex; gap: 10px; justify-content: flex-end; padding-top: 8px; }
+    
     .btn-pri {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 11px 22px; border-radius: var(--radius-sm);
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: var(--radius-md);
       background: linear-gradient(135deg, var(--primary), #3b82f6);
       color: white; border: none; font-size: 14px; font-weight: 600;
-      font-family: var(--font); cursor: pointer;
-      transition: opacity var(--trans), transform var(--trans);
+      font-family: var(--font); cursor: pointer; transition: var(--trans);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
     }
-    .btn-pri:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-pri:hover { opacity: .92; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3); }
+    
     .btn-sec {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 11px 22px; border-radius: var(--radius-sm);
-      background: white; color: var(--g600);
-      border: 1.5px solid var(--g200); font-size: 14px; font-weight: 600;
-      font-family: var(--font); cursor: pointer; transition: all var(--trans);
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: var(--radius-md);
+      background: var(--bg-card); color: var(--text-muted);
+      border: 1.5px solid var(--border); font-size: 14px; font-weight: 600;
+      font-family: var(--font); cursor: pointer; transition: var(--trans);
     }
-    .btn-sec:hover { background: var(--g50); }
+    .btn-sec:hover { background: var(--bg-hover); color: var(--text-main); }
 
     /* ═══════════════════════════════
        CONFIGURAÇÕES
     ═══════════════════════════════ */
-    .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media(max-width: 800px) { .config-grid { grid-template-columns: 1fr; } }
+    .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media(max-width: 1024px) { .config-grid { grid-template-columns: 1fr; } }
     .config-card {
-      background: white; border-radius: var(--radius); padding: 24px;
-      box-shadow: var(--shadow); border: 1px solid var(--g100);
+      background: var(--bg-card); border-radius: var(--radius-lg); padding: 24px;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border);
     }
     .config-card-title {
-      font-family: var(--font-display);
-      font-size: 15px; font-weight: 700; color: var(--g800);
-      margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+      font-size: 16px; font-weight: 700; color: var(--text-main);
+      margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
     }
     .aviso-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 0; border-bottom: 1px solid var(--g100);
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 0; border-bottom: 1px solid var(--border);
     }
     .aviso-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .aviso-color {
-      width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
-    }
-    .aviso-label { flex: 1; font-size: 13px; font-weight: 500; color: var(--g700); }
+    .aviso-color { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+    .aviso-label { flex: 1; font-size: 13px; font-weight: 600; color: var(--text-main); }
     .aviso-input {
-      width: 70px; padding: 7px 10px;
-      border: 1.5px solid var(--g200); border-radius: var(--radius-xs);
-      font-size: 13px; font-family: var(--font); color: var(--g800);
-      outline: none; text-align: center;
+      width: 70px; padding: 8px;
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      background: var(--bg-card); color: var(--text-main);
+      font-size: 13px; font-family: var(--font); outline: none; text-align: center;
     }
     .aviso-input:focus { border-color: var(--primary); }
-    .aviso-suffix { font-size: 12px; color: var(--g500); white-space: nowrap; }
-    .feriado-list { max-height: 260px; overflow-y: auto; }
+    .aviso-suffix { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+    
+    .feriado-list { max-height: 280px; overflow-y: auto; padding-right: 4px; }
     .feriado-item {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 0; border-bottom: 1px solid var(--g100);
+      padding: 12px 0; border-bottom: 1px solid var(--border);
       font-size: 13px;
     }
     .feriado-item:last-child { border-bottom: none; }
-    .feriado-nome { font-weight: 600; color: var(--g800); }
-    .feriado-data { color: var(--g500); font-size: 12px; }
+    .feriado-nome { font-weight: 600; color: var(--text-main); }
+    .feriado-data { color: var(--text-muted); font-size: 12px; }
+    
     .btn-del-feriado {
-      width: 28px; height: 28px; border-radius: 6px;
-      background: var(--red-l); color: var(--red);
+      width: 28px; height: 28px; border-radius: 8px;
+      background: var(--danger-light); color: var(--danger);
       border: none; cursor: pointer; display: flex;
       align-items: center; justify-content: center; font-size: 12px;
-      transition: all var(--trans); flex-shrink: 0;
+      transition: var(--trans); flex-shrink: 0;
     }
-    .btn-del-feriado:hover { background: var(--red); color: white; }
+    .btn-del-feriado:hover { background: var(--danger); color: white; }
+    
     .add-feriado-row {
-      display: grid; grid-template-columns: 1fr 1fr auto;
-      gap: 8px; align-items: end; margin-top: 14px;
+      display: grid; grid-template-columns: 1.2fr 0.8fr auto;
+      gap: 10px; align-items: end; margin-top: 20px;
+      border-top: 1px dashed var(--border); padding-top: 20px;
     }
 
     /* ═══════════════════════════════
-       ADM — USUÁRIOS
+       TELA ADM USUÁRIOS
     ═══════════════════════════════ */
-    .users-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .users-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
     .user-card {
-      background: white; border-radius: var(--radius); padding: 20px;
-      box-shadow: var(--shadow); border: 1px solid var(--g100);
-      display: flex; align-items: center; gap: 14px;
+      background: var(--bg-card); border-radius: var(--radius-lg); padding: 24px;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+      display: flex; align-items: center; gap: 16px;
+      position: relative;
     }
     .user-card-avatar {
-      width: 44px; height: 44px; border-radius: 50%;
+      width: 48px; height: 48px; border-radius: 50%;
       background: linear-gradient(135deg, var(--primary), #60a5fa);
       display: flex; align-items: center; justify-content: center;
       color: white; font-size: 16px; font-weight: 700; flex-shrink: 0;
     }
-    .user-card-info { flex: 1; }
-    .user-card-info strong { font-size: 14px; font-weight: 700; color: var(--g900); display: block; }
-    .user-card-info span { font-size: 12px; color: var(--g500); }
+    .user-card-info { flex: 1; min-width: 0; }
+    .user-card-info strong { font-size: 15px; font-weight: 700; color: var(--text-main); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .user-card-info span { font-size: 12px; color: var(--text-muted); display: block; margin-top: 2px; }
     .user-card-actions { display: flex; gap: 6px; }
+    
     .nivel-badge {
-      font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px;
-      text-transform: uppercase; letter-spacing: .4px;
+      font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: .5px; margin-top: 6px; display: inline-block;
     }
-    .nivel-adm { background: #FEF3C7; color: #92400E; }
-    .nivel-user { background: var(--primary-l); color: var(--primary); }
+    .nivel-adm { background: #fef3c7; color: #92400e; }
+    .nivel-user { background: var(--primary-light); color: var(--primary); }
 
     /* ═══════════════════════════════
-       MODAL
+       MODAL GLASSMORPHISM
     ═══════════════════════════════ */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.45);
-      backdrop-filter: blur(3px); z-index: 200;
-      display: flex; align-items: center; justify-content: center; padding: 20px;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
     }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    
     .modal-box {
-      background: white; border-radius: 18px;
-      width: 100%; max-width: 560px;
+      background: var(--bg-card); border-radius: 20px;
+      width: 100%; max-width: 580px;
       box-shadow: var(--shadow-lg); overflow: hidden;
+      border: 1px solid var(--border);
+      transform: translateY(20px); transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    .modal-overlay.open .modal-box { transform: translateY(0); }
+    
     .modal-header {
-      padding: 22px 26px 0; display: flex;
+      padding: 24px 28px 0; display: flex;
       align-items: center; justify-content: space-between;
     }
-    .modal-header h3 {
-      font-family: var(--font-display);
-      font-size: 18px; font-weight: 800; color: var(--g900);
-    }
+    .modal-header h3 { font-size: 18px; font-weight: 800; color: var(--text-main); }
+    
     .btn-close-modal {
       width: 32px; height: 32px; border-radius: 8px;
-      background: var(--g100); border: none; cursor: pointer;
-      color: var(--g500); font-size: 14px;
+      background: var(--bg-hover); border: none; cursor: pointer;
+      color: var(--text-muted); font-size: 14px;
       display: flex; align-items: center; justify-content: center;
-      transition: all var(--trans);
+      transition: var(--trans);
     }
-    .btn-close-modal:hover { background: var(--g200); }
-    .modal-body { padding: 22px 26px 26px; }
-    .detalhe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .detalhe-item label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--g400); display: block; margin-bottom: 4px; }
-    .detalhe-item span { font-size: 14px; color: var(--g800); font-weight: 500; }
+    .btn-close-modal:hover { background: var(--border); color: var(--text-main); }
+    
+    .modal-body { padding: 24px 28px 28px; }
+    .detalhe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .detalhe-item label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text-light); display: block; margin-bottom: 4px; }
+    .detalhe-item span { font-size: 14px; color: var(--text-main); font-weight: 600; }
     .detalhe-item.full { grid-column: 1 / -1; }
     .detalhe-obs {
-      background: var(--g50); border-radius: var(--radius-sm);
-      padding: 12px 14px; font-size: 13px; color: var(--g700);
-      margin-top: 4px; line-height: 1.6;
+      background: var(--bg-app); border-radius: var(--radius-md); border: 1px solid var(--border);
+      padding: 14px 16px; font-size: 13px; color: var(--text-main);
+      margin-top: 6px; line-height: 1.6;
     }
+    
     .modal-confirmar-ico {
-      width: 56px; height: 56px; background: var(--red-l);
+      width: 56px; height: 56px; background: var(--danger-light);
       border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; color: var(--red); font-size: 22px;
+      justify-content: center; color: var(--danger); font-size: 22px;
       margin: 0 auto 16px;
     }
 
     /* ═══════════════════════════════
-       TOAST
+       TOAST & FLOATING FEEDBACK
     ═══════════════════════════════ */
     #toast-wrap {
       position: fixed; bottom: 24px; right: 24px;
       display: flex; flex-direction: column; gap: 10px; z-index: 300;
     }
     .toast {
-      display: flex; align-items: center; gap: 10px;
-      padding: 13px 18px; border-radius: 10px;
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 20px; border-radius: var(--radius-md);
       font-size: 13px; font-weight: 600;
-      font-family: var(--font); box-shadow: var(--shadow-lg);
-      animation: slideIn .3s ease;
+      box-shadow: var(--shadow-lg);
+      animation: slideIn .3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border-left: 4px solid;
     }
-    .toast.ok     { background: #ecfdf5; color: #065f46; border-left: 3px solid var(--green); }
-    .toast.erro   { background: var(--red-l); color: #7f1d1d; border-left: 3px solid var(--red); }
-    .toast.aviso  { background: var(--amber-l); color: #78350f; border-left: 3px solid var(--amber); }
+    .toast.ok     { background: var(--success-light); color: var(--success); border-left-color: var(--success); }
+    .toast.erro   { background: var(--danger-light); color: var(--danger); border-left-color: var(--danger); }
+    .toast.aviso  { background: var(--warning-light); color: var(--warning); border-left-color: var(--warning); }
     @keyframes slideIn { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-    /* ═══════════════════════════════
-       LOADING
-    ═══════════════════════════════ */
+    /* LOADING SCREEN */
     #loading-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.3);
-      backdrop-filter: blur(2px); z-index: 400;
-      display: flex; align-items: center; justify-content: center;
+      position: fixed; inset: 0; background: rgba(9, 13, 22, 0.4);
+      backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+      z-index: 400; display: flex; align-items: center; justify-content: center;
+      opacity: 1; transition: opacity 0.25s ease;
     }
+    #loading-overlay.hidden { display: none !important; }
     .loading-spin {
-      width: 44px; height: 44px; border: 4px solid rgba(255,255,255,.3);
-      border-top-color: white; border-radius: 50%;
+      width: 48px; height: 48px; border: 4px solid rgba(255,255,255,.2);
+      border-top-color: var(--primary); border-radius: 50%;
       animation: spin .8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ═══════════════════════════════
-       PAGINAÇÃO
-    ═══════════════════════════════ */
-    .paginacao {
-      display: flex; align-items: center; justify-content: center;
-      gap: 6px; padding: 16px;
-    }
+    /* PAGINAÇÃO */
+    .paginacao { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 20px; }
     .pag-btn {
-      width: 34px; height: 34px; border-radius: 8px;
-      border: 1.5px solid var(--g200); background: white;
+      width: 36px; height: 36px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--bg-card);
       font-size: 13px; font-weight: 600; font-family: var(--font);
-      color: var(--g600); cursor: pointer; transition: all var(--trans);
+      color: var(--text-muted); cursor: pointer; transition: var(--trans);
       display: flex; align-items: center; justify-content: center;
     }
     .pag-btn:hover, .pag-btn.ativo { background: var(--primary); color: white; border-color: var(--primary); }
     .pag-btn:disabled { opacity: .4; cursor: not-allowed; }
 
-    /* ═══════════════════════════════
-       PRAZO VENCIMENTO PREVIEW
-    ═══════════════════════════════ */
+    /* PRAZO PREVIEW */
     .prazo-preview {
-      background: var(--primary-l); border: 1.5px solid #bfdbfe;
-      border-radius: var(--radius-sm); padding: 12px 16px;
-      display: flex; align-items: center; gap: 10px; margin-top: 4px;
+      background: var(--primary-light); border: 1.5px solid rgba(37, 99, 235, 0.25);
+      border-radius: var(--radius-md); padding: 12px 16px;
+      display: flex; align-items: center; gap: 10px; margin-top: 8px;
     }
     .prazo-preview i { color: var(--primary); }
     .prazo-preview span { font-size: 13px; font-weight: 600; color: var(--primary); }
@@ -627,62 +791,89 @@
   </div>
 </div>
 
-<!-- ══ APP ══ -->
-<div id="app-principal" class="hidden">
+<!-- ══ APP PRINCIPAL ══ -->
+<div id="app-principal" class="app-container hidden">
 
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <div class="topbar-brand">
-      <div class="topbar-logo"><i class="fas fa-scale-balanced"></i></div>
-      <div class="topbar-brand-text">
-        <strong>PrazoControl</strong>
-        <span>Controle de Prazos</span>
+  <!-- BARRA LATERAL (SIDEBAR) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-area">
+        <div class="logo-icon"><i class="fas fa-scale-balanced"></i></div>
+        <span class="logo-text">PrazoControl</span>
       </div>
+      <button class="btn-toggle-sidebar" onclick="toggleSidebar()">
+        <i class="fas fa-angles-left" id="toggle-sidebar-icon"></i>
+      </button>
     </div>
-    <nav class="topbar-nav">
-      <button class="topbar-btn ativo" id="btn-nav-inicio" onclick="irPara('inicio')">
-        <i class="fas fa-house"></i> Início
+    
+    <nav class="sidebar-nav">
+      <button class="nav-item ativo" id="btn-nav-inicio" onclick="irPara('inicio')">
+        <i class="fas fa-chart-pie"></i>
+        <span>Painel Geral</span>
       </button>
-      <button class="topbar-btn" id="btn-nav-cadastro" onclick="novoProcesso()">
-        <i class="fas fa-plus"></i> Novo Processo
+      <button class="nav-item" id="btn-nav-cadastro" onclick="novoProcesso()">
+        <i class="fas fa-folder-plus"></i>
+        <span>Novo Processo</span>
       </button>
-      <button class="topbar-btn" id="btn-nav-consulta" onclick="irPara('consulta')">
-        <i class="fas fa-magnifying-glass"></i> Consultar
+      <button class="nav-item" id="btn-nav-consulta" onclick="irPara('consulta')">
+        <i class="fas fa-magnifying-glass"></i>
+        <span>Consultar</span>
       </button>
-      <button class="topbar-btn" id="btn-nav-calc" onclick="irPara('calc')">
-        <i class="fas fa-calculator"></i> Calculadora
+      <button class="nav-item" id="btn-nav-calc" onclick="irPara('calc')">
+        <i class="fas fa-calculator"></i>
+        <span>Calculadora</span>
       </button>
-      <button class="topbar-btn" id="btn-nav-config" onclick="irPara('config')">
-        <i class="fas fa-gear"></i> Configurações
+      <button class="nav-item" id="btn-nav-config" onclick="irPara('config')">
+        <i class="fas fa-sliders"></i>
+        <span>Configurações</span>
       </button>
-      <button class="topbar-btn hidden" id="btn-nav-adm" onclick="irPara('adm')">
-        <i class="fas fa-users-cog"></i> Usuários
+      <button class="nav-item hidden" id="btn-nav-adm" onclick="irPara('adm')">
+        <i class="fas fa-users-gear"></i>
+        <span>Usuários</span>
       </button>
     </nav>
-    <div class="topbar-right">
-      <div class="user-badge">
-        <div class="user-avatar" id="user-avatar-top">U</div>
-        <span id="user-nome-top">Usuário</span>
-        <span class="admin-badge hidden" id="adm-badge-top">ADM</span>
+    
+    <div class="sidebar-footer">
+      <div class="theme-toggle-area">
+        <i class="fas fa-sun" id="theme-light-icon"></i>
+        <label class="switch">
+          <input type="checkbox" id="theme-switch" onchange="toggleTheme()">
+          <span class="slider"></span>
+        </label>
+        <i class="fas fa-moon" id="theme-dark-icon"></i>
       </div>
-      <button class="btn-logout" onclick="fazerLogout()"><i class="fas fa-right-from-bracket"></i> Sair</button>
-    </div>
-  </header>
-
-  <div class="app-wrap">
-
-    <!-- ══ TELA INÍCIO ══ -->
-    <section id="tela-inicio" class="tela ativa">
-      <div class="dash-header">
-        <div class="dash-header-left">
-          <h2 id="dash-boas-vindas">Bom dia!</h2>
-          <p>Acompanhe os prazos processuais em tempo real</p>
+      
+      <div class="user-profile">
+        <div class="user-avatar" id="user-avatar-top">U</div>
+        <div class="user-info">
+          <span class="user-name" id="user-nome-top">Usuário</span>
+          <span class="user-role" id="user-nivel-top">Acesso</span>
         </div>
-        <button class="btn-pri" onclick="novoProcesso()">
-          <i class="fas fa-plus"></i> Novo Processo
+        <button class="btn-logout" onclick="fazerLogout()" title="Sair do sistema">
+          <i class="fas fa-right-from-bracket"></i>
         </button>
       </div>
+    </div>
+  </aside>
 
+  <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    
+    <!-- CABEÇALHO DO CONTEÚDO -->
+    <header class="content-header">
+      <div style="display:flex; align-items:center;">
+        <button class="btn-menu-mobile" onclick="toggleMobileMenu()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="page-title-wrap">
+          <h1 id="page-title">Painel Geral</h1>
+          <p id="page-subtitle">Acompanhe os prazos processuais em tempo real</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- ══ SEÇÃO: TELA INÍCIO ══ -->
+    <section id="tela-inicio" class="tela-section">
       <!-- STATS -->
       <div class="dash-stats">
         <div class="stat-card">
@@ -718,8 +909,8 @@
       <!-- ALERTAS -->
       <div class="alertas-section" id="alertas-section">
         <div class="alertas-titulo">
-          <i class="fas fa-bell" style="color:var(--amber)"></i>
-          Alertas de Prazo
+          <i class="fas fa-bell" style="color:var(--warning)"></i>
+          Alertas de Prazos Próximos ou Vencidos
         </div>
         <div class="alertas-grid" id="alertas-grid">
           <div class="empty-state" style="padding:30px">
@@ -761,15 +952,16 @@
       </div>
     </section>
 
-    <!-- ══ TELA CADASTRO ══ -->
-    <section id="tela-cadastro" class="tela">
+    <!-- ══ SEÇÃO: TELA CADASTRO ══ -->
+    <section id="tela-cadastro" class="tela-section hidden">
       <div class="tela-header">
         <button class="btn-voltar" onclick="irPara('inicio')"><i class="fas fa-arrow-left"></i></button>
-        <div class="tela-titulo">
-          <h2 id="cad-titulo">Novo Processo</h2>
-          <p id="cad-sub">Preencha os dados do processo para controle de prazo</p>
+        <div class="page-title-wrap">
+          <h2 id="cad-titulo" style="font-size: 20px; font-weight: 800;">Novo Processo</h2>
+          <p id="cad-sub" style="font-size: 13px; color: var(--text-muted);">Preencha os dados do processo para controle de prazo</p>
         </div>
       </div>
+      
       <div class="form-card">
         <input type="hidden" id="p-id"/>
         <div class="form-section">
@@ -778,13 +970,13 @@
           </div>
           <div class="form-row-2">
             <div class="fgroup">
-              <label>Nº do Processo <span class="req">*</span></label>
-              <input type="text" id="p-num" placeholder="Ex: 0001234-56.2024.8.09.0000"/>
+              <label class="light-lbl">Nº do Processo <span class="req">*</span></label>
+              <input type="text" id="p-num" placeholder="Ex: 0001234-56.2024.8.09.0000" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)"/>
               <span class="field-err" id="err-p-num"></span>
             </div>
             <div class="fgroup">
-              <label>Parte / Assunto <span class="req">*</span></label>
-              <input type="text" id="p-parte" placeholder="Nome da parte ou assunto"/>
+              <label class="light-lbl">Parte / Assunto <span class="req">*</span></label>
+              <input type="text" id="p-parte" placeholder="Nome da parte ou assunto" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)"/>
               <span class="field-err" id="err-p-parte"></span>
             </div>
           </div>
@@ -796,18 +988,18 @@
           </div>
           <div class="form-row-3">
             <div class="fgroup">
-              <label>Data de Início da Contagem <span class="req">*</span></label>
-              <input type="date" id="p-data-inicio" onchange="calcularPrazo()"/>
+              <label class="light-lbl">Data de Início da Contagem <span class="req">*</span></label>
+              <input type="date" id="p-data-inicio" onchange="calcularPrazo()" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)"/>
               <span class="field-err" id="err-p-data"></span>
             </div>
             <div class="fgroup">
-              <label>Quantidade de Dias <span class="req">*</span></label>
-              <input type="number" id="p-dias" placeholder="Ex: 15" min="1" onchange="calcularPrazo()"/>
+              <label class="light-lbl">Quantidade de Dias <span class="req">*</span></label>
+              <input type="number" id="p-dias" placeholder="Ex: 15" min="1" onchange="calcularPrazo()" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)"/>
               <span class="field-err" id="err-p-dias"></span>
             </div>
             <div class="fgroup">
-              <label>Tipo de Contagem <span class="req">*</span></label>
-              <select id="p-tipo-contagem" onchange="calcularPrazo()">
+              <label class="light-lbl">Tipo de Contagem <span class="req">*</span></label>
+              <select id="p-tipo-contagem" onchange="calcularPrazo()" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)">
                 <option value="uteis">Dias Úteis</option>
                 <option value="corridos">Dias Corridos</option>
               </select>
@@ -826,8 +1018,8 @@
             <i class="fas fa-note-sticky" style="color:var(--primary)"></i> Observações
           </div>
           <div class="fgroup">
-            <label>Observações</label>
-            <textarea id="p-obs" placeholder="Informações adicionais sobre o processo..."></textarea>
+            <label class="light-lbl">Observações</label>
+            <textarea id="p-obs" placeholder="Informações adicionais sobre o processo..." style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)"></textarea>
           </div>
         </div>
 
@@ -838,16 +1030,8 @@
       </div>
     </section>
 
-    <!-- ══ TELA CONSULTA ══ -->
-    <section id="tela-consulta" class="tela">
-      <div class="dash-header">
-        <div class="dash-header-left">
-          <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--g900)">
-            <i class="fas fa-magnifying-glass" style="color:var(--primary);margin-right:8px"></i>Consultar Processos
-          </h2>
-          <p style="color:var(--g500);font-size:13px">Busque por número de processo ou filtre por prazo</p>
-        </div>
-      </div>
+    <!-- ══ SEÇÃO: TELA CONSULTA ══ -->
+    <section id="tela-consulta" class="tela-section hidden">
       <div class="table-card">
         <div class="table-header">
           <div class="search-wrap" style="min-width:320px">
@@ -859,7 +1043,7 @@
             <button class="filter-btn" onclick="setFiltroStatus('verde',this)">No Prazo</button>
             <button class="filter-btn" onclick="setFiltroStatus('amarelo',this)">Atenção</button>
             <button class="filter-btn" onclick="setFiltroStatus('vermelho',this)">Crítico</button>
-            <button class="filter-btn" onclick="setFiltroStatus('vencido',this)">Vencido</button>
+            <button class="filter-btn" onclick="setFiltroStatus('vencido',this)">Vencidos</button>
           </div>
         </div>
         <div class="table-wrap">
@@ -883,40 +1067,31 @@
       </div>
     </section>
 
-    <!-- ══ TELA CONFIGURAÇÕES ══ -->
-    <section id="tela-config" class="tela">
-      <div class="dash-header">
-        <div class="dash-header-left">
-          <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--g900)">
-            <i class="fas fa-gear" style="color:var(--primary);margin-right:8px"></i>Configurações
-          </h2>
-          <p style="color:var(--g500);font-size:13px">Personalize os alertas de prazo e gerencie feriados</p>
-        </div>
-      </div>
+    <!-- ══ SEÇÃO: TELA CONFIGURAÇÕES ══ -->
+    <section id="tela-config" class="tela-section hidden">
       <div class="config-grid">
-
         <!-- AVISOS DE PRAZO -->
         <div class="config-card">
           <div class="config-card-title">
-            <i class="fas fa-bell" style="color:var(--amber)"></i> Alertas de Prazo
+            <i class="fas fa-bell" style="color:var(--warning)"></i> Alertas de Prazo
           </div>
-          <p style="font-size:13px;color:var(--g500);margin-bottom:16px">
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">
             Configure quantos dias antes do vencimento cada alerta é ativado.
           </p>
           <div class="aviso-item">
-            <div class="aviso-color" style="background:var(--green)"></div>
+            <div class="aviso-color" style="background:var(--success)"></div>
             <div class="aviso-label">Alerta Verde (atenção leve)</div>
             <input class="aviso-input" type="number" id="cfg-verde" min="1" value="15"/>
             <div class="aviso-suffix">dias antes</div>
           </div>
           <div class="aviso-item">
-            <div class="aviso-color" style="background:var(--amber)"></div>
+            <div class="aviso-color" style="background:var(--warning)"></div>
             <div class="aviso-label">Alerta Amarelo (atenção média)</div>
             <input class="aviso-input" type="number" id="cfg-amarelo" min="1" value="7"/>
             <div class="aviso-suffix">dias antes</div>
           </div>
           <div class="aviso-item">
-            <div class="aviso-color" style="background:var(--red)"></div>
+            <div class="aviso-color" style="background:var(--danger)"></div>
             <div class="aviso-label">Alerta Vermelho (urgente)</div>
             <input class="aviso-input" type="number" id="cfg-vermelho" min="1" value="3"/>
             <div class="aviso-suffix">dias antes</div>
@@ -928,12 +1103,12 @@
           </div>
         </div>
 
-        <!-- FERIADOS NACIONAIS (info) -->
+        <!-- FERIADOS NACIONAIS -->
         <div class="config-card">
           <div class="config-card-title">
-            <i class="fas fa-calendar-xmark" style="color:var(--red)"></i> Feriados Nacionais
+            <i class="fas fa-calendar-xmark" style="color:var(--danger)"></i> Feriados Nacionais
           </div>
-          <p style="font-size:13px;color:var(--g500);margin-bottom:12px">
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">
             Feriados nacionais fixos considerados na contagem de dias úteis.
           </p>
           <div class="feriado-list" id="feriados-nacionais-list"></div>
@@ -943,133 +1118,117 @@
         <div class="config-card" id="card-feriados-extra">
           <div class="config-card-title">
             <i class="fas fa-map-location-dot" style="color:var(--primary)"></i> Feriados Estaduais / Municipais
-            <span class="admin-badge" style="margin-left:auto">ADM</span>
+            <span class="nivel-badge nivel-adm" style="margin-left:auto; margin-top:0">ADM</span>
           </div>
-          <p style="font-size:13px;color:var(--g500);margin-bottom:12px">
-            Cadastre feriados estaduais e municipais que afetam todos os usuários.
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">
+            Cadastre feriados estaduais e municipais que afetam a contagem geral.
           </p>
           <div class="feriado-list" id="feriados-extra-list"></div>
+          
           <div class="add-feriado-row" id="add-feriado-row">
             <div class="fgroup" style="margin:0">
-              <label style="font-size:12px">Nome do Feriado</label>
-              <input type="text" id="novo-feriado-nome" placeholder="Ex: Aniversário de Goiás"/>
+              <label class="light-lbl" style="font-size:11px">Nome do Feriado</label>
+              <input type="text" id="novo-feriado-nome" placeholder="Ex: Anec. de Goiás" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app); padding:8px 12px;"/>
             </div>
             <div class="fgroup" style="margin:0">
-              <label style="font-size:12px">Data (DD/MM)</label>
-              <input type="text" id="novo-feriado-data" placeholder="Ex: 24/10" maxlength="5"/>
+              <label class="light-lbl" style="font-size:11px">Data (DD/MM)</label>
+              <input type="text" id="novo-feriado-data" placeholder="Ex: 24/10" maxlength="5" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app); padding:8px 12px;"/>
             </div>
-            <button class="btn-pri" style="margin-top:auto" onclick="adicionarFeriado()">
+            <button class="btn-pri" style="padding: 10px 14px;" onclick="adicionarFeriado()">
               <i class="fas fa-plus"></i>
             </button>
           </div>
         </div>
-
       </div>
     </section>
 
-
-    <!-- ══ TELA CALCULADORA ══ -->
-    <section id="tela-calc" class="tela">
-      <div class="dash-header">
-        <div class="dash-header-left">
-          <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--g900)">
-            <i class="fas fa-calculator" style="color:var(--primary);margin-right:8px"></i>Calculadora de Prazos
-          </h2>
-          <p style="color:var(--g500);font-size:13px">Calcule prazos em dias úteis ou corridos considerando os feriados cadastrados no sistema</p>
-        </div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px">
-        <div class="form-card" style="height:fit-content">
+    <!-- ══ SEÇÃO: TELA CALCULADORA ══ -->
+    <section id="tela-calc" class="tela-section hidden">
+      <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:28px;max-width:1100px">
+        <div class="form-card" style="height:fit-content; width:100%;">
           <div class="form-section-title" style="margin-bottom:20px">
             <i class="fas fa-calendar-days" style="color:var(--primary)"></i> Dados para Cálculo
           </div>
           <div class="fgroup">
-            <label>Data de Início <span class="req">*</span></label>
-            <input type="date" id="calc-data-inicio" oninput="calcularPrazoCalc()"/>
+            <label class="light-lbl">Data de Início <span class="req">*</span></label>
+            <input type="date" id="calc-data-inicio" oninput="calcularPrazoCalc()" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)"/>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
             <div class="fgroup">
-              <label>Dias Úteis</label>
-              <input type="number" id="calc-dias-uteis" placeholder="0" min="0" value="0" oninput="calcularPrazoCalc()"/>
+              <label class="light-lbl">Dias Úteis</label>
+              <input type="number" id="calc-dias-uteis" placeholder="0" min="0" value="0" oninput="calcularPrazoCalc()" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)"/>
             </div>
             <div class="fgroup">
-              <label>Dias Corridos</label>
-              <input type="number" id="calc-dias-corridos" placeholder="0" min="0" value="0" oninput="calcularPrazoCalc()"/>
+              <label class="light-lbl">Dias Corridos</label>
+              <input type="number" id="calc-dias-corridos" placeholder="0" min="0" value="0" oninput="calcularPrazoCalc()" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)"/>
             </div>
           </div>
           <div style="margin-top:8px">
-            <button class="btn-pri" style="width:100%" onclick="calcularPrazoCalc()">
-              <i class="fas fa-calculator"></i> Calcular
+            <button class="btn-pri" style="width:100%; justify-content:center;" onclick="calcularPrazoCalc()">
+              <i class="fas fa-calculator"></i> Calcular Prazo
             </button>
           </div>
         </div>
 
-        <div id="calc-resultado-wrap" style="display:flex;flex-direction:column;gap:16px">
-          <div id="calc-res-uteis" class="form-card hidden" style="border-left:4px solid var(--primary)">
-            <div class="form-section-title" style="margin-bottom:14px">
+        <div id="calc-resultado-wrap" style="display:flex;flex-direction:column;gap:20px">
+          <div id="calc-res-uteis" class="form-card hidden" style="border-left:4px solid var(--primary); width:100%;">
+            <div class="form-section-title" style="margin-bottom:16px">
               <i class="fas fa-briefcase" style="color:var(--primary)"></i> Resultado — Dias Úteis
             </div>
-            <div style="font-size:12px;color:var(--g500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Data de Vencimento</div>
-            <div id="calc-res-uteis-data" style="font-family:var(--font-display);font-size:32px;font-weight:800;color:var(--primary);margin-bottom:12px"></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-              <div style="background:var(--g50);border-radius:8px;padding:12px">
-                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dias Contados</div>
-                <div id="calc-res-uteis-qtd" style="font-size:20px;font-weight:800;color:var(--g800);font-family:var(--font-display)"></div>
+            <div style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">Data de Vencimento</div>
+            <div id="calc-res-uteis-data" style="font-size:32px;font-weight:800;color:var(--primary);margin-bottom:12px; letter-spacing:-0.5px"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div style="background:var(--bg-app);border-radius:10px;padding:12px; border:1px solid var(--border)">
+                <div style="font-size:10px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Dias Contados</div>
+                <div id="calc-res-uteis-qtd" style="font-size:16px;font-weight:800;color:var(--text-main);"></div>
               </div>
-              <div style="background:var(--g50);border-radius:8px;padding:12px">
-                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dia da Semana</div>
-                <div id="calc-res-uteis-diaSemana" style="font-size:16px;font-weight:700;color:var(--g700)"></div>
+              <div style="background:var(--bg-app);border-radius:10px;padding:12px; border:1px solid var(--border)">
+                <div style="font-size:10px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Dia da Semana</div>
+                <div id="calc-res-uteis-diaSemana" style="font-size:15px;font-weight:700;color:var(--text-main)"></div>
               </div>
             </div>
-            <div id="calc-res-uteis-feriados" style="margin-top:12px"></div>
+            <div id="calc-res-uteis-feriados" style="margin-top:16px; border-top:1px dashed var(--border); padding-top:12px"></div>
           </div>
 
-          <div id="calc-res-corridos" class="form-card hidden" style="border-left:4px solid #7c3aed">
-            <div class="form-section-title" style="margin-bottom:14px">
+          <div id="calc-res-corridos" class="form-card hidden" style="border-left:4px solid #7c3aed; width:100%;">
+            <div class="form-section-title" style="margin-bottom:16px">
               <i class="fas fa-calendar" style="color:#7c3aed"></i> Resultado — Dias Corridos
             </div>
-            <div style="font-size:12px;color:var(--g500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Data de Vencimento</div>
-            <div id="calc-res-corridos-data" style="font-family:var(--font-display);font-size:32px;font-weight:800;color:#7c3aed;margin-bottom:12px"></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-              <div style="background:var(--g50);border-radius:8px;padding:12px">
-                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dias Contados</div>
-                <div id="calc-res-corridos-qtd" style="font-size:20px;font-weight:800;color:var(--g800);font-family:var(--font-display)"></div>
+            <div style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">Data de Vencimento</div>
+            <div id="calc-res-corridos-data" style="font-size:32px;font-weight:800;color:#7c3aed;margin-bottom:12px; letter-spacing:-0.5px"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div style="background:var(--bg-app);border-radius:10px;padding:12px; border:1px solid var(--border)">
+                <div style="font-size:10px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Dias Contados</div>
+                <div id="calc-res-corridos-qtd" style="font-size:16px;font-weight:800;color:var(--text-main);"></div>
               </div>
-              <div style="background:var(--g50);border-radius:8px;padding:12px">
-                <div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Dia da Semana</div>
-                <div id="calc-res-corridos-diaSemana" style="font-size:16px;font-weight:700;color:var(--g700)"></div>
+              <div style="background:var(--bg-app);border-radius:10px;padding:12px; border:1px solid var(--border)">
+                <div style="font-size:10px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Dia da Semana</div>
+                <div id="calc-res-corridos-diaSemana" style="font-size:15px;font-weight:700;color:var(--text-main)"></div>
               </div>
             </div>
           </div>
 
-          <div id="calc-empty" class="form-card" style="text-align:center;padding:40px 20px;color:var(--g400)">
+          <div id="calc-empty" class="form-card" style="text-align:center;padding:50px 20px;color:var(--text-light); width:100%;">
             <i class="fas fa-calculator" style="font-size:36px;display:block;margin-bottom:12px"></i>
-            <p style="font-size:14px">Preencha a data de início e os dias<br>para calcular o prazo</p>
+            <p style="font-size:14px;color:var(--text-muted)">Preencha a data de início e os dias para obter o cálculo</p>
           </div>
         </div>
       </div>
 
-      <div class="form-card" style="max-width:900px;margin-top:24px">
+      <div class="form-card" style="max-width:1100px;margin-top:24px; width:100%;">
         <div class="form-section-title" style="margin-bottom:14px">
-          <i class="fas fa-calendar-xmark" style="color:var(--red)"></i> Feriados Considerados no Cálculo
+          <i class="fas fa-calendar-xmark" style="color:var(--danger)"></i> Feriados Considerados no Cálculo
         </div>
-        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">
-          Feriados nacionais e estaduais/municipais cadastrados que são descontados na contagem de dias úteis.
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">
+          Feriados fixos e estaduais cadastrados que serão automaticamente excluídos em contagens de dias úteis.
         </p>
         <div id="calc-feriados-lista" style="display:flex;flex-wrap:wrap;gap:8px"></div>
       </div>
     </section>
 
-    <!-- ══ TELA ADM USUÁRIOS ══ -->
-    <section id="tela-adm" class="tela">
-      <div class="dash-header">
-        <div class="dash-header-left">
-          <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--g900)">
-            <i class="fas fa-users-cog" style="color:var(--primary);margin-right:8px"></i>Gerenciar Usuários
-          </h2>
-          <p style="color:var(--g500);font-size:13px">Crie e gerencie contas de acesso ao sistema</p>
-        </div>
+    <!-- ══ SEÇÃO: TELA ADM USUÁRIOS ══ -->
+    <section id="tela-adm" class="tela-section hidden">
+      <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
         <button class="btn-pri" onclick="abrirModal('modal-novo-usuario')">
           <i class="fas fa-user-plus"></i> Novo Usuário
         </button>
@@ -1079,11 +1238,11 @@
       </div>
     </section>
 
-  </div><!-- /app-wrap -->
-</div><!-- /app-principal -->
+  </main>
+</div>
 
-<!-- ══ MODAL: VER PROCESSO ══ -->
-<div id="modal-ver" class="modal-overlay hidden">
+<!-- ══ MODAL: VER DETALHES DO PROCESSO (GLASSMORPHISM) ══ -->
+<div id="modal-ver" class="modal-overlay">
   <div class="modal-box">
     <div class="modal-header">
       <h3><i class="fas fa-file-lines" style="color:var(--primary);margin-right:8px"></i>Detalhes do Processo</h3>
@@ -1093,16 +1252,16 @@
   </div>
 </div>
 
-<!-- ══ MODAL: CONFIRMAR EXCLUIR ══ -->
-<div id="modal-confirmar" class="modal-overlay hidden">
+<!-- ══ MODAL: CONFIRMAR EXCLUSÃO ══ -->
+<div id="modal-confirmar" class="modal-overlay">
   <div class="modal-box" style="max-width:420px">
     <div class="modal-body" style="text-align:center;padding:36px 28px">
       <div class="modal-confirmar-ico"><i class="fas fa-trash"></i></div>
-      <h3 style="font-size:18px;font-weight:800;color:var(--g900);margin-bottom:10px">Confirmar exclusão</h3>
-      <p id="confirmar-msg" style="color:var(--g500);font-size:14px;margin-bottom:24px"></p>
+      <h3 style="font-size:18px;font-weight:800;color:var(--text-main);margin-bottom:10px">Confirmar exclusão</h3>
+      <p id="confirmar-msg" style="color:var(--text-muted);font-size:14px;margin-bottom:24px"></p>
       <div style="display:flex;gap:10px;justify-content:center">
         <button class="btn-sec" onclick="fecharModal('modal-confirmar')">Cancelar</button>
-        <button class="btn-pri" id="btn-confirmar" style="background:var(--red);background-image:none">
+        <button class="btn-pri" id="btn-confirmar" style="background:var(--danger);background-image:none">
           <i class="fas fa-trash"></i> Excluir
         </button>
       </div>
@@ -1111,7 +1270,7 @@
 </div>
 
 <!-- ══ MODAL: NOVO USUÁRIO ══ -->
-<div id="modal-novo-usuario" class="modal-overlay hidden">
+<div id="modal-novo-usuario" class="modal-overlay">
   <div class="modal-box">
     <div class="modal-header">
       <h3><i class="fas fa-user-plus" style="color:var(--primary);margin-right:8px"></i>Novo Usuário</h3>
@@ -1120,28 +1279,28 @@
     <div class="modal-body">
       <div class="form-row-2">
         <div class="fgroup">
-          <label>Nome Completo <span class="req">*</span></label>
-          <input type="text" id="nu-nome" placeholder="João da Silva"/>
+          <label class="light-lbl">Nome Completo <span class="req">*</span></label>
+          <input type="text" id="nu-nome" placeholder="João da Silva" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)"/>
         </div>
         <div class="fgroup">
-          <label>Login (usuário) <span class="req">*</span></label>
-          <input type="text" id="nu-login" placeholder="joao.silva"/>
+          <label class="light-lbl">Login (usuário) <span class="req">*</span></label>
+          <input type="text" id="nu-login" placeholder="joao.silva" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)"/>
         </div>
       </div>
       <div class="form-row-2">
         <div class="fgroup">
-          <label>Senha <span class="req">*</span></label>
-          <input type="password" id="nu-senha" placeholder="Mínimo 6 caracteres"/>
+          <label class="light-lbl">Senha <span class="req">*</span></label>
+          <input type="password" id="nu-senha" placeholder="Mínimo 6 caracteres" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)"/>
         </div>
         <div class="fgroup">
-          <label>Nível de Acesso</label>
-          <select id="nu-nivel">
+          <label class="light-lbl">Nível de Acesso</label>
+          <select id="nu-nivel" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app)">
             <option value="usuario">Usuário</option>
             <option value="adm">Administrador</option>
           </select>
         </div>
       </div>
-      <div style="text-align:right;margin-top:8px">
+      <div style="text-align:right;margin-top:16px">
         <button class="btn-sec" onclick="fecharModal('modal-novo-usuario')" style="margin-right:8px">Cancelar</button>
         <button class="btn-pri" onclick="criarUsuario()"><i class="fas fa-floppy-disk"></i> Criar Usuário</button>
       </div>
@@ -1149,11 +1308,11 @@
   </div>
 </div>
 
-<!-- TOAST -->
+<!-- TOAST & FEEDBACK -->
 <div id="toast-wrap"></div>
-<!-- LOADING -->
 <div id="loading-overlay" class="hidden"><div class="loading-spin"></div></div>
 
+<!-- LÓGICA DO APP (FIREBASE E COMPORTAMENTO) -->
 <script type="module">
 import { initializeApp }
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -1161,21 +1320,25 @@ import { getFirestore, collection, doc, addDoc, getDoc,
          getDocs, updateDoc, deleteDoc, setDoc,
          query, orderBy, serverTimestamp, where }
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 /* ══════════════════════════
    🔥 FIREBASE CONFIG
-   ⚠️  SUBSTITUA pelos seus dados
 ══════════════════════════ */
 const firebaseConfig = {
-  apiKey:            "AIzaSyDZcQ4Lq0W5PH-vxppcsZjYgI2wyACS08g",
-  authDomain:        "prazocontrol-4145c.firebaseapp.com",
-  projectId:         "prazocontrol-4145c",
-  storageBucket:     "prazocontrol-4145c.firebasestorage.app",
-  messagingSenderId: "970087762119",
-  appId:             "1:970087762119:web:db92091d97b86a01c396e2"
+  apiKey: "AIzaSyD43gX6mL2jAuusT1J6hilfyToEbgmekXU",
+  authDomain: "prazocontrol-7d145.firebaseapp.com",
+  projectId: "prazocontrol-7d145",
+  storageBucket: "prazocontrol-7d145.firebasestorage.app",
+  messagingSenderId: "625447201038",
+  appId: "1:625447201038:web:382150cef2b175c0460f5f",
+  measurementId: "G-04KYJYXDV5"
 };
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const auth = getAuth(app);
 
 /* ══════════════════════════
    ESTADO GLOBAL
@@ -1191,16 +1354,10 @@ const POR_PAGINA    = 15;
 let configAlertas = { verde: 15, amarelo: 7, vermelho: 3 };
 let feriadosExtra = [];
 
-/* ══════════════════════════
-   FERIADOS NACIONAIS (FIXOS)
-══════════════════════════ */
 const FERIADOS_NACIONAIS = [
   { nome: "Confraternização Universal",    data: "01/01" },
-  { nome: "Carnaval",                      data: "variável" },
-  { nome: "Paixão de Cristo",              data: "variável" },
   { nome: "Tiradentes",                    data: "21/04" },
   { nome: "Dia do Trabalho",               data: "01/05" },
-  { nome: "Corpus Christi",                data: "variável" },
   { nome: "Independência do Brasil",       data: "07/09" },
   { nome: "Nossa Sra. Aparecida",          data: "12/10" },
   { nome: "Finados",                       data: "02/11" },
@@ -1209,8 +1366,34 @@ const FERIADOS_NACIONAIS = [
   { nome: "Natal",                         data: "25/12" },
 ];
 
+const DIAS_SEMANA = ["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
+
 /* ══════════════════════════
-   UTILS
+   REATIVIDADE DA SESSÃO (AUTH)
+══════════════════════════ */
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const loginName = user.email.split("@")[0].split("_")[0];
+    try {
+      const snap = await getDoc(doc(db, "usuarios", loginName));
+      if (snap.exists()) {
+        usuarioAtual = { id: loginName, ...snap.data() };
+        iniciarApp();
+      } else {
+        await signOut(auth);
+        limparSessaoVisual();
+      }
+    } catch(e) {
+      console.error("Erro ao validar sessão:", e);
+      limparSessaoVisual();
+    }
+  } else {
+    limparSessaoVisual();
+  }
+});
+
+/* ══════════════════════════
+   UTILS VISUAIS & INTERAÇÃO
 ══════════════════════════ */
 function toast(tipo, msg) {
   const ico = { ok: "circle-check", erro: "circle-xmark", aviso: "triangle-exclamation" };
@@ -1218,15 +1401,32 @@ function toast(tipo, msg) {
   el.className = `toast ${tipo}`;
   el.innerHTML = `<i class="fas fa-${ico[tipo]||"info"}"></i><span>${msg}</span>`;
   document.getElementById("toast-wrap").appendChild(el);
-  setTimeout(() => el.remove(), 4000);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(-10px)';
+    setTimeout(() => el.remove(), 300);
+  }, 4000);
 }
 
 function loading(v) {
-  document.getElementById("loading-overlay").classList.toggle("hidden", !v);
+  const overlay = document.getElementById("loading-overlay");
+  if (v) {
+    overlay.classList.remove("hidden");
+    overlay.style.opacity = '1';
+  } else {
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.classList.add("hidden"), 250);
+  }
 }
 
-window.abrirModal = (id) => document.getElementById(id)?.classList.remove("hidden");
-window.fecharModal = (id) => document.getElementById(id)?.classList.add("hidden");
+window.abrirModal = (id) => {
+  const modal = document.getElementById(id);
+  modal.classList.add("open");
+};
+window.fecharModal = (id) => {
+  const modal = document.getElementById(id);
+  modal.classList.remove("open");
+};
 
 function formatarData(dateStr) {
   if (!dateStr) return "-";
@@ -1247,15 +1447,56 @@ function objParaStr(dt) {
 }
 
 /* ══════════════════════════
-   CÁLCULO DE PRAZO
+   CÁLCULO DE PRAZOS E TIMELINE
 ══════════════════════════ */
+function obterNomeFeriado(dateObj) {
+  const y = dateObj.getFullYear();
+  const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const d = String(dateObj.getDate()).padStart(2, "0");
+  const keyMD = `${d}/${m}`;
+  const keyYMD = `${y}-${m}-${d}`;
+  
+  const extraF = feriadosExtra.find(f => {
+    if (f.data && f.data.includes("/")) {
+      const [fd, fm] = f.data.split("/");
+      return fd.padStart(2,"0") === d && fm.padStart(2,"0") === m;
+    }
+    return false;
+  });
+  if (extraF) return extraF.nome;
+  
+  const fixo = FERIADOS_NACIONAIS.find(f => f.data === keyMD);
+  if (fixo) return fixo.nome;
+  
+  const a = y % 19, b = Math.floor(y / 100), c = y % 100;
+  const d2 = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d2 - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m2 = Math.floor((a + 11 * h + 22 * l) / 451);
+  const mes = Math.floor((h + l - 7 * m2 + 114) / 31);
+  const dia = ((h + l - 7 * m2 + 114) % 31) + 1;
+  
+  const pascoa = new Date(y, mes - 1, dia);
+  const sexta = new Date(pascoa); sexta.setDate(pascoa.getDate() - 2);
+  const carnaval1 = new Date(pascoa); carnaval1.setDate(pascoa.getDate() - 48);
+  const carnaval2 = new Date(pascoa); carnaval2.setDate(pascoa.getDate() - 47);
+  const corpus = new Date(pascoa); corpus.setDate(pascoa.getDate() + 60);
+  
+  if (objParaStr(sexta) === keyYMD) return "Sexta-feira Santa";
+  if (objParaStr(carnaval1) === keyYMD) return "Carnaval (Segunda-feira)";
+  if (objParaStr(carnaval2) === keyYMD) return "Carnaval (Terça-feira)";
+  if (objParaStr(corpus) === keyYMD) return "Corpus Christi";
+  
+  return null;
+}
+
 function getFeriadosAno(ano) {
   const feriadosFixos = [
     `${ano}-01-01`, `${ano}-04-21`, `${ano}-05-01`,
     `${ano}-09-07`, `${ano}-10-12`, `${ano}-11-02`,
     `${ano}-11-15`, `${ano}-11-20`, `${ano}-12-25`,
   ];
-  // Páscoa (algoritmo de Butcher)
   const a = ano % 19, b = Math.floor(ano / 100), c = ano % 100;
   const d2 = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
   const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d2 - g + 15) % 30;
@@ -1271,11 +1512,9 @@ function getFeriadosAno(ano) {
   const corpus = new Date(pascoa); corpus.setDate(pascoa.getDate() + 60);
   [sexta, carnaval1, carnaval2, corpus].forEach(d => feriadosFixos.push(objParaStr(d)));
 
-  // Feriados extras
   feriadosExtra.forEach(f => {
     if (f.data && f.data.includes("/")) {
       const [dd, mm] = f.data.split("/");
-      feriadosExtra.forEach(() => {});
       const chave = `${ano}-${mm.padStart(2,"0")}-${dd.padStart(2,"0")}`;
       feriadosFixos.push(chave);
     }
@@ -1290,19 +1529,76 @@ function calcularVencimento(dataInicio, qtdDias, tipo) {
     dt.setDate(dt.getDate() + qtdDias);
     return objParaStr(dt);
   }
-  // dias úteis
   let cont = 0;
-  const feriados = getFeriadosAno(dt.getFullYear());
-  const feriadosProx = getFeriadosAno(dt.getFullYear() + 1);
-  const allFeriados = new Set([...feriados, ...feriadosProx]);
   let atual = new Date(dt);
   while (cont < qtdDias) {
     atual.setDate(atual.getDate() + 1);
     const dow = atual.getDay();
     const key = objParaStr(atual);
-    if (dow !== 0 && dow !== 6 && !allFeriados.has(key)) cont++;
+    const feriadosSet = getFeriadosAno(atual.getFullYear());
+    if (dow !== 0 && dow !== 6 && !feriadosSet.has(key)) cont++;
   }
   return objParaStr(atual);
+}
+
+function obterDetalhesCalculo(dataInicioStr, qtdDias, tipo) {
+  const dt = dataParaObj(dataInicioStr);
+  const inicioFormatado = formatarData(dataInicioStr);
+  
+  if (tipo === "corridos") {
+    const venc = calcularVencimento(dataInicioStr, qtdDias, "corridos");
+    return {
+      inicio: inicioFormatado,
+      fim: formatarData(venc),
+      dias: qtdDias,
+      feriados: [],
+      finsDeSemana: 0,
+      texto: `Prazo de <strong>${qtdDias} dias corridos</strong> iniciado em ${inicioFormatado}. Contagem contínua sem desconto de feriados ou finais de semana.`
+    };
+  }
+  
+  let cont = 0;
+  let atual = new Date(dt);
+  const feriadosListados = [];
+  let finsDeSemana = 0;
+  
+  while (cont < qtdDias) {
+    atual.setDate(atual.getDate() + 1);
+    const dow = atual.getDay();
+    const key = objParaStr(atual);
+    const feriadoNome = obterNomeFeriado(atual);
+    
+    if (dow === 0 || dow === 6) {
+      finsDeSemana++;
+    } else if (feriadoNome) {
+      feriadosListados.push(`${formatarData(key)} (${feriadoNome})`);
+    } else {
+      cont++;
+    }
+  }
+  
+  const vencimentoFinal = objParaStr(atual);
+  return {
+    inicio: inicioFormatado,
+    fim: formatarData(vencimentoFinal),
+    dias: qtdDias,
+    feriados: feriadosListados,
+    finsDeSemana: finsDeSemana,
+    texto: `Prazo de <strong>${qtdDias} dias úteis</strong> iniciado em ${inicioFormatado}. Descontados <strong>${finsDeSemana} dias de final de semana</strong> (sáb/dom) e <strong>${feriadosListados.length} feriados</strong>.`
+  };
+}
+
+function calcularProgresso(dataInicioStr, vencimentoStr) {
+  const inicio = dataParaObj(dataInicioStr).getTime();
+  const venc = dataParaObj(vencimentoStr).getTime();
+  const hoje = new Date().setHours(0, 0, 0, 0);
+  
+  if (hoje <= inicio) return 0;
+  if (hoje >= venc) return 100;
+  
+  const total = venc - inicio;
+  const decorrido = hoje - inicio;
+  return Math.round((decorrido / total) * 100);
 }
 
 function diasRestantes(vencimento) {
@@ -1331,10 +1627,10 @@ function getStatusLabel(dias) {
 }
 
 /* ══════════════════════════
-   LOGIN / LOGOUT
+   LOGIN E CONTROLE DE CONTAS (AUTH PERSISTENTE COM MIGRAÇÃO)
 ══════════════════════════ */
 window.fazerLogin = async () => {
-  const usuario = document.getElementById("login-usuario").value.trim();
+  const usuario = document.getElementById("login-usuario").value.trim().toLowerCase();
   const senha   = document.getElementById("login-senha").value.trim();
   const errEl   = document.getElementById("login-erro");
   errEl.textContent = "";
@@ -1342,88 +1638,189 @@ window.fazerLogin = async () => {
   if (!usuario || !senha) { errEl.textContent = "Preencha usuário e senha."; return; }
   loading(true);
   try {
-    const snap = await getDoc(doc(db, "usuarios", usuario));
-    if (!snap.exists()) { errEl.textContent = "Usuário não encontrado."; return; }
+    const userDocRef = doc(db, "usuarios", usuario);
+    const snap = await getDoc(userDocRef);
+    if (!snap.exists()) {
+      errEl.textContent = "Usuário não cadastrado.";
+      loading(false);
+      return;
+    }
+    
     const dados = snap.data();
-    if (dados.senha !== senha) { errEl.textContent = "Senha incorreta."; return; }
-    usuarioAtual = { id: usuario, ...dados };
-    iniciarApp();
+    let authSalt = dados.authSalt;
+    
+    // Geração retroativa de authSalt para migração automática
+    if (!authSalt) {
+      authSalt = String(Date.now());
+      await updateDoc(userDocRef, { authSalt });
+    }
+    
+    const email = `${usuario}_${authSalt}@prazocontrol.local`;
+    
+    try {
+      await signInWithEmailAndPassword(auth, email, senha);
+    } catch(authErr) {
+      console.error("Erro no signInWithEmailAndPassword:", authErr);
+      if (authErr.code === "auth/user-not-found" || authErr.code === "auth/invalid-credential") {
+        if (dados.senha === senha) {
+          try {
+            await createUserWithEmailAndPassword(auth, email, senha);
+          } catch(createErr) {
+            console.error("Erro ao criar conta Auth:", createErr);
+            errEl.textContent = `Erro na sincronização: ${createErr.code}`;
+            loading(false);
+            return;
+          }
+        } else {
+          errEl.textContent = "Senha incorreta.";
+          loading(false);
+          return;
+        }
+      } else {
+        errEl.textContent = `Falha na autenticação: ${authErr.code}`;
+        loading(false);
+        return;
+      }
+    }
   } catch(e) {
-    errEl.textContent = "Erro ao conectar. Tente novamente.";
-  } finally { loading(false); }
+    console.error("Erro de conexão no login:", e);
+    errEl.textContent = `Erro de conexão: ${e.message || e.code || e}`;
+  } finally {
+    loading(false);
+  }
 };
 
 document.getElementById("login-senha").addEventListener("keydown", e => {
   if (e.key === "Enter") window.fazerLogin();
 });
 
-window.fazerLogout = () => {
+window.fazerLogout = async () => {
+  loading(true);
+  try {
+    await signOut(auth);
+  } catch(e) {
+    console.error("Erro no logout:", e);
+  } finally {
+    limparSessaoVisual();
+    loading(false);
+  }
+};
+
+function limparSessaoVisual() {
   usuarioAtual = null;
   todosProcessos = [];
   document.getElementById("tela-login").style.display = "flex";
   document.getElementById("app-principal").classList.add("hidden");
   document.getElementById("login-usuario").value = "";
   document.getElementById("login-senha").value = "";
-};
+}
 
 async function iniciarApp() {
   document.getElementById("tela-login").style.display = "none";
   document.getElementById("app-principal").classList.remove("hidden");
 
-  // Avatar e nome
   const iniciais = usuarioAtual.nome.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase();
   document.getElementById("user-avatar-top").textContent = iniciais;
   document.getElementById("user-nome-top").textContent = usuarioAtual.nome;
-
-  const hora = new Date().getHours();
-  const saudacao = hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
-  document.getElementById("dash-boas-vindas").textContent = `${saudacao}, ${usuarioAtual.nome.split(" ")[0]}!`;
+  document.getElementById("user-nivel-top").textContent = usuarioAtual.nivel === 'adm' ? 'Administrador' : 'Usuário';
 
   if (usuarioAtual.nivel === "adm") {
-    document.getElementById("adm-badge-top").classList.remove("hidden");
     document.getElementById("btn-nav-adm").classList.remove("hidden");
     document.getElementById("card-feriados-extra").style.display = "block";
     document.getElementById("add-feriado-row").style.display = "grid";
     carregarUsuarios();
   } else {
+    document.getElementById("btn-nav-adm").classList.add("hidden");
     document.getElementById("card-feriados-extra").style.display = "block";
     document.getElementById("add-feriado-row").style.display = "none";
+  }
+
+  // Recupera preferências locais de sidebar e tema
+  if (localStorage.getItem("sidebarCollapsed") === "true") {
+    document.getElementById("sidebar").classList.add("collapsed");
+    document.getElementById("toggle-sidebar-icon").className = "fas fa-angles-right";
+  }
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+    document.getElementById("theme-switch").checked = true;
   }
 
   await carregarConfig();
   await carregarProcessos();
   renderFeriadosNacionais();
-  irPara("inicio");
 }
 
 /* ══════════════════════════
-   NAVEGAÇÃO
+   NAVEGAÇÃO E BARRA LATERAL (SIDEBAR)
 ══════════════════════════ */
+window.toggleSidebar = () => {
+  const sidebar = document.getElementById("sidebar");
+  const icon = document.getElementById("toggle-sidebar-icon");
+  const isCollapsed = sidebar.classList.toggle("collapsed");
+  icon.className = isCollapsed ? "fas fa-angles-right" : "fas fa-angles-left";
+  localStorage.setItem("sidebarCollapsed", isCollapsed);
+};
+
+window.toggleMobileMenu = () => {
+  document.getElementById("sidebar").classList.toggle("mobile-open");
+};
+
+window.toggleTheme = () => {
+  const isDark = document.body.classList.toggle("dark-mode");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  document.getElementById("theme-switch").checked = isDark;
+};
+
 window.irPara = (tela) => {
-  document.querySelectorAll(".tela").forEach(t => t.classList.remove("ativa"));
-  document.getElementById(`tela-${tela}`)?.classList.add("ativa");
-  document.querySelectorAll(".topbar-btn").forEach(b => b.classList.remove("ativo"));
+  document.querySelectorAll(".tela-section").forEach(t => t.classList.add("hidden"));
+  document.getElementById(`tela-${tela}`)?.classList.remove("hidden");
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("ativo"));
+  
   const mapa = { inicio: "btn-nav-inicio", cadastro: "btn-nav-cadastro", consulta: "btn-nav-consulta", config: "btn-nav-config", adm: "btn-nav-adm", calc: "btn-nav-calc" };
   if (mapa[tela]) document.getElementById(mapa[tela])?.classList.add("ativo");
+  
+  const titulos = { 
+    inicio: { t: "Painel Geral", s: "Acompanhe os prazos processuais em tempo real" },
+    cadastro: { t: "Identificação do Processo", s: "Preencha os dados do processo para controle de prazo" },
+    consulta: { t: "Consulta de Processos", s: "Busque por número ou filtre por status de vencimento" },
+    calc: { t: "Calculadora de Prazos", s: "Simule contagens considerando os feriados cadastrados" },
+    config: { t: "Configurações Globais", s: "Personalize parâmetros de prazos e feriados regionais" },
+    adm: { t: "Controle de Acessos", s: "Crie e exclua contas de acesso ao sistema" }
+  };
+  
+  if (titulos[tela]) {
+    document.getElementById("page-title").textContent = titulos[tela].t;
+    document.getElementById("page-subtitle").textContent = titulos[tela].s;
+  }
+  
+  document.getElementById("sidebar").classList.remove("mobile-open");
   window.scrollTo(0, 0);
+  
   if (tela === "consulta") renderTabela("consulta");
   if (tela === "adm") carregarUsuarios();
   if (tela === "config") carregarFeriadosExtra();
   if (tela === "calc") renderCalcFeriados();
 };
 
+// Fecha sidebar no mobile ao clicar fora
+document.addEventListener("click", e => {
+  const sidebar = document.getElementById("sidebar");
+  const btn = document.querySelector(".btn-menu-mobile");
+  if (sidebar.classList.contains("mobile-open") && !sidebar.contains(e.target) && !btn.contains(e.target)) {
+    sidebar.classList.remove("mobile-open");
+  }
+});
+
 /* ══════════════════════════
-   PROCESSOS
+   PROCESSOS E CRUD
 ══════════════════════════ */
 async function carregarProcessos() {
   loading(true);
   try {
     let q;
     if (usuarioAtual.nivel === "adm") {
-      // Admin vê todos os processos
       q = query(collection(db, "processos"), orderBy("criadoEm", "desc"));
     } else {
-      // Usuário comum vê apenas os seus
       q = query(collection(db, "processos"),
         where("usuario", "==", usuarioAtual.id),
         orderBy("criadoEm", "desc"));
@@ -1433,8 +1830,8 @@ async function carregarProcessos() {
     procFiltrados = [...todosProcessos];
     renderDashboard();
     renderTabela("inicio");
-    renderTabela("consulta");
   } catch(e) {
+    console.error("Erro ao carregar processos:", e);
     toast("erro", "Erro ao carregar processos.");
   } finally { loading(false); }
 }
@@ -1502,6 +1899,7 @@ window.salvarProcesso = async () => {
     await carregarProcessos();
     irPara("inicio");
   } catch(e) {
+    console.error("Erro ao salvar processo:", e);
     toast("erro", "Erro ao salvar processo.");
   } finally { loading(false); }
 };
@@ -1513,6 +1911,16 @@ window.verProcesso = (id) => {
   const sc = getStatusClass(dr);
   const sl = getStatusLabel(dr);
   const podeEditar = usuarioAtual.nivel === "adm" || p.usuario === usuarioAtual.id;
+  const detalhes = obterDetalhesCalculo(p.dataInicio, p.dias, p.tipo);
+  
+  let feriadosHtml = "";
+  if (detalhes.feriados.length > 0) {
+    feriadosHtml = `<div style="font-size:11px; font-weight:700; color:var(--text-light); text-transform:uppercase; margin-top:12px; margin-bottom:4px;">Feriados Descontados</div>
+                    <ul style="list-style-type:none; font-size:12px; color:var(--text-muted); display:flex; flex-direction:column; gap:4px;">` +
+                   detalhes.feriados.map(f => `<li><i class="fas fa-calendar-xmark" style="color:var(--danger); margin-right:6px"></i>${f}</li>`).join("") + 
+                   `</ul>`;
+  }
+
   document.getElementById("modal-ver-body").innerHTML = `
     <div class="detalhe-grid">
       <div class="detalhe-item"><label>Nº do Processo</label><span class="proc-num">${p.num}</span></div>
@@ -1523,9 +1931,15 @@ window.verProcesso = (id) => {
       <div class="detalhe-item"><label>Status</label>
         <span class="status-badge status-${sc}"><span class="status-dot"></span>${sl}</span>
       </div>
-      ${p.obs ? `<div class="detalhe-item full"><label>Observações</label><div class="detalhe-obs">${p.obs}</div></div>` : ""}
+      <div class="detalhe-item full"><label>Memória de Cálculo</label>
+        <div class="detalhe-obs">
+          <p style="margin-bottom:8px">${detalhes.texto}</p>
+          ${feriadosHtml}
+        </div>
+      </div>
+      ${p.obs ? `<div class="detalhe-item full"><label>Observações Adicionais</label><div class="detalhe-obs">${p.obs}</div></div>` : ""}
     </div>
-    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:22px">
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px">
       <button class="btn-sec" onclick="fecharModal('modal-ver')">Fechar</button>
       ${podeEditar ? `<button class="btn-pri" onclick="fecharModal('modal-ver');editarProcesso('${id}')"><i class="fas fa-pen"></i> Editar</button>` : ""}
     </div>`;
@@ -1535,7 +1949,6 @@ window.verProcesso = (id) => {
 window.editarProcesso = (id) => {
   const p = todosProcessos.find(x => x.id === id);
   if (!p) return;
-  // Bloquear edição se não for dono nem admin
   if (usuarioAtual.nivel !== "adm" && p.usuario !== usuarioAtual.id) {
     toast("aviso", "Você só pode editar seus próprios processos.");
     return;
@@ -1556,64 +1969,62 @@ window.editarProcesso = (id) => {
 window.confirmarExcluir = (id, num) => {
   const p = todosProcessos.find(x => x.id === id);
   if (!p) return;
-  // Bloquear exclusão se não for dono nem admin
   if (usuarioAtual.nivel !== "adm" && p.usuario !== usuarioAtual.id) {
     toast("aviso", "Você só pode excluir seus próprios processos.");
     return;
   }
-  document.getElementById("confirmar-msg").textContent = `Deseja excluir permanentemente o processo "${num}"?`;
+  document.getElementById("confirmar-msg").innerHTML = `Deseja excluir permanentemente o processo <strong>${num}</strong>?`;
   document.getElementById("btn-confirmar").onclick = async () => {
     loading(true);
     try {
       await deleteDoc(doc(db, "processos", id));
-      toast("ok", "Processo excluído.");
+      toast("ok", "Processo excluído com sucesso.");
       fecharModal("modal-confirmar");
       await carregarProcessos();
-    } catch(e) { toast("erro", "Erro ao excluir."); }
-    finally { loading(false); }
+    } catch(e) { 
+      console.error("Erro ao excluir processo:", e);
+      toast("erro", "Erro ao excluir."); 
+    } finally { loading(false); }
   };
   abrirModal("modal-confirmar");
 };
 
 /* ══════════════════════════
-   RENDER DASHBOARD
+   RENDERIZAÇÃO DA DASHBOARD
 ══════════════════════════ */
 function renderDashboard() {
-  let total = 0, ok2 = 0, atencao = 0, critico = 0;
+  let total = 0, okCount = 0, atencaoCount = 0, criticoCount = 0;
   const alertas = [];
 
   todosProcessos.forEach(p => {
     const dr = diasRestantes(p.vencimento);
     const sc = getStatusClass(dr);
     total++;
-    if (sc === "normal" || sc === "verde") ok2++;
-    if (sc === "amarelo") atencao++;
-    if (sc === "vermelho" || sc === "vencido") critico++;
+    if (sc === "normal" || sc === "verde") okCount++;
+    if (sc === "amarelo") atencaoCount++;
+    if (sc === "vermelho" || sc === "vencido") criticoCount++;
     if (sc !== "normal") {
       alertas.push({ ...p, diasRestantes: dr, statusClass: sc });
     }
   });
 
   document.getElementById("stat-total").textContent   = total;
-  document.getElementById("stat-ok").textContent      = ok2;
-  document.getElementById("stat-atencao").textContent = atencao;
-  document.getElementById("stat-critico").textContent = critico;
+  document.getElementById("stat-ok").textContent      = okCount;
+  document.getElementById("stat-atencao").textContent = atencaoCount;
+  document.getElementById("stat-critico").textContent = criticoCount;
 
   const grid = document.getElementById("alertas-grid");
   if (!alertas.length) {
-    grid.innerHTML = `<div class="empty-state" style="padding:30px"><i class="fas fa-check-circle" style="color:var(--green)"></i><p>Nenhum alerta no momento. Todos os prazos estão ok!</p></div>`;
+    grid.innerHTML = `<div class="empty-state" style="padding:30px"><i class="fas fa-check-circle" style="color:var(--success)"></i><p>Nenhum alerta pendente. Todos os prazos estão em dia!</p></div>`;
     return;
   }
 
-  // Ordenar: vencidos primeiro (mais atrasados antes), depois por dias restantes crescente
   alertas.sort((a, b) => {
     const aVencido = a.diasRestantes < 0;
     const bVencido = b.diasRestantes < 0;
     if (aVencido && !bVencido) return -1;
     if (!aVencido && bVencido) return 1;
-    // Ambos vencidos: mais atrasado primeiro (dr mais negativo)
     if (aVencido && bVencido) return a.diasRestantes - b.diasRestantes;
-    // Ambos não vencidos: menor prazo primeiro
     return a.diasRestantes - b.diasRestantes;
   });
 
@@ -1623,43 +2034,64 @@ function renderDashboard() {
   let html = "";
 
   if (vencidos.length) {
-    html += `<div class="alertas-separador"><i class="fas fa-circle-xmark" style="color:var(--red)"></i> Prazos Vencidos (${vencidos.length})</div>`;
+    html += `<div class="alertas-separador"><i class="fas fa-circle-xmark" style="color:var(--danger)"></i> Prazos Vencidos (${vencidos.length})</div>`;
     html += vencidos.map(p => {
       const dr = p.diasRestantes;
       const label = `Vencido há ${Math.abs(dr)} dia(s)`;
-      return `<div class="alerta-item vencido">
-        <div class="alerta-dot"></div>
-        <div class="alerta-info">
-          <strong>
-            ${p.num}
-            <button class="btn-copiar-num" title="Copiar número" onclick="copiarNumProcesso(this,'${p.num.replace(/'/g,"\\'")}')"><i class="fas fa-copy"></i></button>
-          </strong>
-          <span>${p.parte}</span>
+      const percent = calcularProgresso(p.dataInicio, p.vencimento);
+      const sc = p.statusClass;
+      return `<div class="alerta-item vencido" style="flex-direction: column; align-items: stretch; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%;">
+          <div style="display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0;">
+            <div class="alerta-dot"></div>
+            <div class="alerta-info" style="min-width: 0;">
+              <strong>
+                ${p.num}
+                <button class="btn-copiar-num" title="Copiar número" onclick="copiarNumProcesso(this,'${p.num.replace(/'/g,"\\'")}')"><i class="fas fa-copy"></i></button>
+              </strong>
+              <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">${p.parte}</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
+            <span style="font-size:12px;color:var(--text-muted);">${formatarData(p.vencimento)}</span>
+            <div class="alerta-dias">${label}</div>
+          </div>
         </div>
-        <span style="font-size:12px;color:var(--g500);margin-right:8px">${formatarData(p.vencimento)}</span>
-        <div class="alerta-dias" style="background:#fce7e7;color:#991b1b">${label}</div>
+        <div class="timeline-container" style="margin-top: 2px;">
+          <div class="timeline-bar ${sc}" style="width: ${percent}%"></div>
+        </div>
       </div>`;
     }).join("");
   }
 
   if (aVencer.length) {
-    html += `<div class="alertas-separador" style="margin-top:${vencidos.length ? '10px' : '0'}"><i class="fas fa-clock" style="color:var(--amber)"></i> Próximos a Vencer (${aVencer.length})</div>`;
+    html += `<div class="alertas-separador" style="margin-top:${vencidos.length ? '16px' : '0'}"><i class="fas fa-clock" style="color:var(--warning)"></i> Próximos a Vencer (${aVencer.length})</div>`;
     html += aVencer.map(p => {
       const sc = p.statusClass;
       const dr = p.diasRestantes;
       const label = dr === 0 ? "Vence HOJE!" : `Vence em ${dr} dia(s)`;
       const corLabel = { vermelho: "vermelho", amarelo: "amarelo", verde: "verde" }[sc] || "verde";
-      return `<div class="alerta-item ${corLabel}">
-        <div class="alerta-dot"></div>
-        <div class="alerta-info">
-          <strong>
-            ${p.num}
-            <button class="btn-copiar-num" title="Copiar número" onclick="copiarNumProcesso(this,'${p.num.replace(/'/g,"\\'")}')"><i class="fas fa-copy"></i></button>
-          </strong>
-          <span>${p.parte}</span>
+      const percent = calcularProgresso(p.dataInicio, p.vencimento);
+      return `<div class="alerta-item ${corLabel}" style="flex-direction: column; align-items: stretch; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%;">
+          <div style="display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0;">
+            <div class="alerta-dot"></div>
+            <div class="alerta-info" style="min-width: 0;">
+              <strong>
+                ${p.num}
+                <button class="btn-copiar-num" title="Copiar número" onclick="copiarNumProcesso(this,'${p.num.replace(/'/g,"\\'")}')"><i class="fas fa-copy"></i></button>
+              </strong>
+              <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">${p.parte}</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
+            <span style="font-size:12px;color:var(--text-muted);">${formatarData(p.vencimento)}</span>
+            <div class="alerta-dias">${label}</div>
+          </div>
         </div>
-        <span style="font-size:12px;color:var(--g500);margin-right:8px">${formatarData(p.vencimento)}</span>
-        <div class="alerta-dias">${label}</div>
+        <div class="timeline-container" style="margin-top: 2px;">
+          <div class="timeline-bar ${sc}" style="width: ${percent}%"></div>
+        </div>
       </div>`;
     }).join("");
   }
@@ -1667,9 +2099,6 @@ function renderDashboard() {
   grid.innerHTML = html;
 }
 
-/* ══════════════════════════
-   COPIAR NÚMERO DO PROCESSO
-══════════════════════════ */
 window.copiarNumProcesso = (btn, num) => {
   navigator.clipboard.writeText(num).then(() => {
     const icon = btn.querySelector("i");
@@ -1679,11 +2108,11 @@ window.copiarNumProcesso = (btn, num) => {
       icon.className = "fas fa-copy";
       btn.classList.remove("copiado");
     }, 1800);
-  }).catch(() => toast("aviso", "Não foi possível copiar."));
+  }).catch(() => toast("aviso", "Falha ao copiar."));
 };
 
 /* ══════════════════════════
-   RENDER TABELA
+   RENDERIZAÇÃO DE TABELAS (PAGINADAS)
 ══════════════════════════ */
 function renderTabela(ctx) {
   const tbodyId = ctx === "inicio" ? "tbody-inicio" : "tbody-consulta";
@@ -1709,15 +2138,17 @@ function renderTabela(ctx) {
 
   const tbody = document.getElementById(tbodyId);
   if (!slice.length) {
-    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fas fa-folder-open"></i><p>Nenhum processo encontrado.</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fas fa-folder-open"></i><p>Nenhum processo cadastrado ou localizado.</p></div></td></tr>`;
   } else {
     tbody.innerHTML = slice.map(p => {
       const dr = diasRestantes(p.vencimento);
       const sc = getStatusClass(dr);
       const sl = getStatusLabel(dr);
+      const percent = calcularProgresso(p.dataInicio, p.vencimento);
       const badgeTipo = p.tipo === "uteis"
         ? `<span class="badge-contagem badge-uteis"><i class="fas fa-briefcase"></i> Úteis</span>`
         : `<span class="badge-contagem badge-corridos"><i class="fas fa-calendar"></i> Corridos</span>`;
+        
       return `<tr>
         <td>
           <div style="display:flex;align-items:center;gap:6px">
@@ -1727,13 +2158,18 @@ function renderTabela(ctx) {
         </td>
         <td>${p.parte}</td>
         <td>${formatarData(p.dataInicio)}</td>
-        <td><strong>${formatarData(p.vencimento)}</strong></td>
+        <td>
+          <strong>${formatarData(p.vencimento)}</strong>
+          <div class="timeline-container">
+            <div class="timeline-bar ${sc}" style="width: ${percent}%"></div>
+          </div>
+        </td>
         <td>${p.dias}d</td>
         <td>${badgeTipo}</td>
         <td><span class="status-badge status-${sc}"><span class="status-dot"></span>${sl}</span></td>
         <td>
           <div class="td-actions">
-            <button class="btn-icon view" title="Ver" onclick="verProcesso('${p.id}')"><i class="fas fa-eye"></i></button>
+            <button class="btn-icon view" title="Ver Detalhes" onclick="verProcesso('${p.id}')"><i class="fas fa-eye"></i></button>
             ${(usuarioAtual.nivel === "adm" || p.usuario === usuarioAtual.id) ? `
             <button class="btn-icon edit" title="Editar" onclick="editarProcesso('${p.id}')"><i class="fas fa-pen"></i></button>
             <button class="btn-icon del" title="Excluir" onclick="confirmarExcluir('${p.id}','${p.num.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i></button>
@@ -1744,14 +2180,14 @@ function renderTabela(ctx) {
     }).join("");
   }
 
-  // Paginação
   const pagEl = document.getElementById(pagId);
   if (totalPag <= 1) { pagEl.innerHTML = ""; return; }
+  
   let html = `<button class="pag-btn" ${pag===1?"disabled":""} onclick="mudarPag('${ctx}',${pag-1})"><i class="fas fa-chevron-left"></i></button>`;
   for (let i = 1; i <= totalPag; i++) {
     if (i === 1 || i === totalPag || Math.abs(i - pag) <= 1)
       html += `<button class="pag-btn ${i===pag?"ativo":""}" onclick="mudarPag('${ctx}',${i})">${i}</button>`;
-    else if (Math.abs(i - pag) === 2) html += `<span style="color:var(--g400);align-self:center">…</span>`;
+    else if (Math.abs(i - pag) === 2) html += `<span style="color:var(--text-light);align-self:center">…</span>`;
   }
   html += `<button class="pag-btn" ${pag===totalPag?"disabled":""} onclick="mudarPag('${ctx}',${pag+1})"><i class="fas fa-chevron-right"></i></button>`;
   pagEl.innerHTML = html;
@@ -1767,20 +2203,22 @@ window.filtrarTabela = () => { pagAtual = 1; renderTabela("inicio"); };
 window.filtrarConsulta = () => { pagConsultaAtual = 1; renderTabela("consulta"); };
 window.setFiltroStatus = (status, btn) => {
   filtroStatusAtual = status;
-  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("ativo"));
+  btn.parentNode.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("ativo"));
   btn.classList.add("ativo");
   pagConsultaAtual = 1;
   renderTabela("consulta");
 };
 
 /* ══════════════════════════
-   CONFIGURAÇÕES
+   CONFIGURAÇÕES E ALERTA CONFIG
 ══════════════════════════ */
 async function carregarConfig() {
   try {
     const snap = await getDoc(doc(db, "config", "alertas"));
     if (snap.exists()) configAlertas = snap.data();
-  } catch(e) {}
+  } catch(e) {
+    console.error("Erro ao ler limites de alertas:", e);
+  }
   document.getElementById("cfg-verde").value   = configAlertas.verde;
   document.getElementById("cfg-amarelo").value = configAlertas.amarelo;
   document.getElementById("cfg-vermelho").value= configAlertas.vermelho;
@@ -1790,18 +2228,23 @@ window.salvarConfig = async () => {
   const verde    = parseInt(document.getElementById("cfg-verde").value);
   const amarelo  = parseInt(document.getElementById("cfg-amarelo").value);
   const vermelho = parseInt(document.getElementById("cfg-vermelho").value);
+  
   if (!verde || !amarelo || !vermelho) { toast("aviso", "Preencha todos os valores."); return; }
   if (vermelho >= amarelo || amarelo >= verde) {
     toast("aviso", "Os valores devem ser: Verde > Amarelo > Vermelho."); return;
   }
+  
   loading(true);
   try {
     await setDoc(doc(db, "config", "alertas"), { verde, amarelo, vermelho });
     configAlertas = { verde, amarelo, vermelho };
-    toast("ok", "Configurações salvas com sucesso.");
+    toast("ok", "Configurações atualizadas.");
     renderDashboard();
-  } catch(e) { toast("erro", "Erro ao salvar configurações."); }
-  finally { loading(false); }
+    renderTabela("inicio");
+  } catch(e) { 
+    console.error("Erro ao salvar config:", e);
+    toast("erro", "Erro ao salvar configurações."); 
+  } finally { loading(false); }
 };
 
 function renderFeriadosNacionais() {
@@ -1814,14 +2257,17 @@ async function carregarFeriadosExtra() {
   try {
     const snap = await getDoc(doc(db, "config", "feriados_extra"));
     feriadosExtra = snap.exists() ? (snap.data().lista || []) : [];
-  } catch(e) { feriadosExtra = []; }
+  } catch(e) { 
+    console.error("Erro ao carregar feriados extras:", e);
+    feriadosExtra = []; 
+  }
   renderFeriadosExtra();
 }
 
 function renderFeriadosExtra() {
   const list = document.getElementById("feriados-extra-list");
   if (!feriadosExtra.length) {
-    list.innerHTML = `<p style="font-size:13px;color:var(--g400);padding:8px 0">Nenhum feriado estadual/municipal cadastrado.</p>`;
+    list.innerHTML = `<p style="font-size:13px;color:var(--text-light);padding:8px 0">Nenhum feriado cadastrado.</p>`;
     return;
   }
   list.innerHTML = feriadosExtra.map((f, i) =>
@@ -1834,135 +2280,50 @@ function renderFeriadosExtra() {
 }
 
 window.adicionarFeriado = async () => {
-  if (usuarioAtual?.nivel !== "adm") { toast("aviso", "Apenas administradores podem cadastrar feriados."); return; }
+  if (usuarioAtual?.nivel !== "adm") { toast("aviso", "Função exclusiva para administradores."); return; }
   const nome = document.getElementById("novo-feriado-nome").value.trim();
   const data = document.getElementById("novo-feriado-data").value.trim();
   if (!nome || !data) { toast("aviso", "Preencha nome e data."); return; }
-  if (!/^\d{2}\/\d{2}$/.test(data)) { toast("aviso", "Data no formato DD/MM."); return; }
+  if (!/^\d{2}\/\d{2}$/.test(data)) { toast("aviso", "Formato de data incorreto (DD/MM)."); return; }
+  
   feriadosExtra.push({ nome, data });
   loading(true);
   try {
     await setDoc(doc(db, "config", "feriados_extra"), { lista: feriadosExtra });
-    toast("ok", "Feriado adicionado.");
+    toast("ok", "Feriado regional adicionado.");
     document.getElementById("novo-feriado-nome").value = "";
     document.getElementById("novo-feriado-data").value = "";
     renderFeriadosExtra();
-  } catch(e) { feriadosExtra.pop(); toast("erro", "Erro ao salvar."); }
-  finally { loading(false); }
+  } catch(e) { 
+    console.error("Erro ao salvar feriado extra:", e);
+    feriadosExtra.pop(); 
+    toast("erro", "Erro ao cadastrar feriado."); 
+  } finally { loading(false); }
 };
 
 window.removerFeriado = async (idx) => {
   if (usuarioAtual?.nivel !== "adm") return;
-  feriadosExtra.splice(idx, 1);
+  const removido = feriadosExtra.splice(idx, 1)[0];
   loading(true);
   try {
     await setDoc(doc(db, "config", "feriados_extra"), { lista: feriadosExtra });
-    toast("ok", "Feriado removido.");
+    toast("ok", "Feriado regional excluído.");
     renderFeriadosExtra();
-  } catch(e) { toast("erro", "Erro ao remover."); }
-  finally { loading(false); }
+  } catch(e) { 
+    console.error("Erro ao remover feriado extra:", e);
+    feriadosExtra.splice(idx, 0, removido);
+    toast("erro", "Erro ao remover feriado."); 
+  } finally { loading(false); }
 };
 
 /* ══════════════════════════
-   USUÁRIOS (ADM)
+   CALCULADORA DE PRAZOS INDEPENDENTE
 ══════════════════════════ */
-async function carregarUsuarios() {
-  try {
-    const snap = await getDocs(collection(db, "usuarios"));
-    const lista = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    const grid = document.getElementById("users-grid");
-    if (!lista.length) {
-      grid.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>Nenhum usuário cadastrado.</p></div>`;
-      return;
-    }
-    grid.innerHTML = lista.map(u => {
-      const iniciais = u.nome.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase();
-      return `<div class="user-card">
-        <div class="user-card-avatar">${iniciais}</div>
-        <div class="user-card-info">
-          <strong>${u.nome}</strong>
-          <span>@${u.id}</span>
-        </div>
-        <span class="nivel-badge ${u.nivel === 'adm' ? 'nivel-adm' : 'nivel-user'}">${u.nivel === 'adm' ? 'ADM' : 'Usuário'}</span>
-        ${u.id !== usuarioAtual.id ? `<div class="user-card-actions"><button class="btn-icon del" title="Excluir" onclick="excluirUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button></div>` : ""}
-      </div>`;
-    }).join("");
-  } catch(e) { toast("erro", "Erro ao carregar usuários."); }
-}
-
-window.criarUsuario = async () => {
-  const nome  = document.getElementById("nu-nome").value.trim();
-  const login = document.getElementById("nu-login").value.trim().toLowerCase();
-  const senha = document.getElementById("nu-senha").value.trim();
-  const nivel = document.getElementById("nu-nivel").value;
-  if (!nome || !login || !senha) { toast("aviso", "Preencha todos os campos."); return; }
-  if (senha.length < 6) { toast("aviso", "A senha deve ter no mínimo 6 caracteres."); return; }
-  loading(true);
-  try {
-    const snap = await getDoc(doc(db, "usuarios", login));
-    if (snap.exists()) { toast("aviso", "Login já existe."); return; }
-    await setDoc(doc(db, "usuarios", login), { nome, senha, nivel });
-    toast("ok", "Usuário criado com sucesso.");
-    fecharModal("modal-novo-usuario");
-    document.getElementById("nu-nome").value = "";
-    document.getElementById("nu-login").value = "";
-    document.getElementById("nu-senha").value = "";
-    carregarUsuarios();
-  } catch(e) { toast("erro", "Erro ao criar usuário."); }
-  finally { loading(false); }
-};
-
-window.excluirUsuario = (id, nome) => {
-  document.getElementById("confirmar-msg").textContent = `Deseja excluir o usuário "${nome}"?`;
-  document.getElementById("btn-confirmar").onclick = async () => {
-    loading(true);
-    try {
-      await deleteDoc(doc(db, "usuarios", id));
-      toast("ok", "Usuário excluído.");
-      fecharModal("modal-confirmar");
-      carregarUsuarios();
-    } catch(e) { toast("erro", "Erro ao excluir."); }
-    finally { loading(false); }
-  };
-  abrirModal("modal-confirmar");
-};
-
-/* ══════════════════════════
-   CRIAR ADM PADRÃO (1ª VEZ)
-   Acesse: ?setup=1 na URL
-══════════════════════════ */
-async function setupInicial() {
-  if (!window.location.search.includes("setup=1")) return;
-  try {
-    const snap = await getDoc(doc(db, "usuarios", "admin"));
-    if (snap.exists()) { alert("Admin já existe!"); return; }
-    await setDoc(doc(db, "usuarios", "admin"), { nome: "Administrador", senha: "admin123", nivel: "adm" });
-    alert("✅ Usuário criado!\nLogin: admin\nSenha: admin123\n\nRemova ?setup=1 da URL.");
-  } catch(e) { alert("Erro: " + e.message); }
-}
-setupInicial();
-
-/* ══════════════════════════
-   MODAIS — FECHAR
-══════════════════════════ */
-document.querySelectorAll(".modal-overlay").forEach(overlay => {
-  overlay.addEventListener("click", e => { if (e.target === overlay) overlay.classList.add("hidden"); });
-});
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape")
-    document.querySelectorAll(".modal-overlay:not(.hidden)").forEach(m => m.classList.add("hidden"));
-});
-
-/* ══════════════════════════
-   CALCULADORA DE PRAZOS
-══════════════════════════ */
-const DIAS_SEMANA = ["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
-
 function renderCalcFeriados() {
   const lista = document.getElementById("calc-feriados-lista");
   if (!lista) return;
-  // Nacionais fixos
-  const nacionais = [
+  
+  const fixos = [
     { nome: "Confraternização Universal", data: "01/01" },
     { nome: "Tiradentes", data: "21/04" },
     { nome: "Dia do Trabalho", data: "01/05" },
@@ -1972,14 +2333,15 @@ function renderCalcFeriados() {
     { nome: "Proclamação da República", data: "15/11" },
     { nome: "Dia da Consciência Negra", data: "20/11" },
     { nome: "Natal", data: "25/12" },
-    { nome: "Páscoa (variável)", data: "—" },
-    { nome: "Carnaval (variável)", data: "—" },
-    { nome: "Corpus Christi (variável)", data: "—" },
+    { nome: "Páscoa (móvel)", data: "Calculado" },
+    { nome: "Carnaval (móvel)", data: "Calculado" },
+    { nome: "Corpus Christi (móvel)", data: "Calculado" },
   ];
-  const todos = [...nacionais, ...feriadosExtra.map(f => ({ nome: f.nome, data: f.data, extra: true }))];
+  
+  const todos = [...fixos, ...feriadosExtra.map(f => ({ nome: f.nome, data: f.data, extra: true }))];
   lista.innerHTML = todos.map(f =>
-    `<span style="display:inline-flex;align-items:center;gap:6px;background:${f.extra ? '#EFF6FF' : '#F1F5F9'};border:1px solid ${f.extra ? '#BFDBFE' : '#E2E8F0'};border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:${f.extra ? 'var(--primary)' : 'var(--g600)'}">
-      <i class="fas fa-calendar-xmark" style="font-size:10px"></i>${f.nome}${f.data && f.data !== '—' ? ' (' + f.data + ')' : ''}
+    `<span style="display:inline-flex;align-items:center;gap:6px;background:${f.extra ? 'var(--primary-light)' : 'var(--bg-hover)'};border:1px solid ${f.extra ? 'var(--primary)' : 'var(--border)'};border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;color:${f.extra ? 'var(--primary)' : 'var(--text-muted)'}">
+      <i class="fas fa-calendar-check" style="font-size:10px"></i>${f.nome}${f.data && f.data !== 'Calculado' ? ' (' + f.data + ')' : ''}
     </span>`
   ).join("");
 }
@@ -2001,28 +2363,28 @@ window.calcularPrazoCalc = () => {
   }
   empty.classList.add("hidden");
 
-  // Resultado dias úteis
   if (diasUteis > 0) {
     const vencUteis = calcularVencimento(dataInicio, diasUteis, "uteis");
     const dtUteis = dataParaObj(vencUteis);
     document.getElementById("calc-res-uteis-data").textContent = formatarData(vencUteis);
     document.getElementById("calc-res-uteis-qtd").textContent = diasUteis + " dias úteis";
     document.getElementById("calc-res-uteis-diaSemana").textContent = DIAS_SEMANA[dtUteis.getDay()];
-    // Feriados no período
-    const feriadosPeriodo = listarFeriadosPeriodo(dataInicio, vencUteis);
+    
+    const detalhes = obterDetalhesCalculo(dataInicio, diasUteis, "uteis");
     const ferEl = document.getElementById("calc-res-uteis-feriados");
-    if (feriadosPeriodo.length > 0) {
-      ferEl.innerHTML = `<div style="font-size:11px;color:var(--g500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Feriados no período (${feriadosPeriodo.length})</div>` +
-        feriadosPeriodo.map(f => `<div style="font-size:12px;color:var(--g600);padding:2px 0">• ${f}</div>`).join("");
+    
+    if (detalhes.feriados.length > 0) {
+      ferEl.innerHTML = `<div style="font-size:11px;color:var(--text-light);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Feriados no Período (${detalhes.feriados.length})</div>` +
+        `<ul style="list-style-type:none; font-size:12px; color:var(--text-muted); display:flex; flex-direction:column; gap:4px;">` +
+        detalhes.feriados.map(f => `<li><i class="fas fa-calendar-xmark" style="color:var(--danger); margin-right:6px"></i>${f}</li>`).join("") + `</ul>`;
     } else {
-      ferEl.innerHTML = `<div style="font-size:12px;color:var(--green);font-weight:600"><i class="fas fa-check"></i> Nenhum feriado no período</div>`;
+      ferEl.innerHTML = `<div style="font-size:12px;color:var(--success);font-weight:600"><i class="fas fa-check-double"></i> Sem interrupções de feriados no período</div>`;
     }
     resUteis.classList.remove("hidden");
   } else {
     resUteis.classList.add("hidden");
   }
 
-  // Resultado dias corridos
   if (diasCorridos > 0) {
     const vencCorridos = calcularVencimento(dataInicio, diasCorridos, "corridos");
     const dtCorridos = dataParaObj(vencCorridos);
@@ -2035,28 +2397,111 @@ window.calcularPrazoCalc = () => {
   }
 };
 
-function listarFeriadosPeriodo(dataIni, dataFim) {
-  const ini = dataParaObj(dataIni);
-  const fim = dataParaObj(dataFim);
-  const resultado = [];
-  const anos = new Set();
-  let cur = new Date(ini); cur.setDate(cur.getDate() + 1);
-  while (cur <= fim) { anos.add(cur.getFullYear()); cur.setDate(cur.getDate() + 1); }
-  const allFeriados = {};
-  anos.forEach(ano => {
-    const set = getFeriadosAno(ano);
-    set.forEach(k => { allFeriados[k] = true; });
-  });
-  cur = new Date(ini); cur.setDate(cur.getDate() + 1);
-  while (cur <= fim) {
-    const key = objParaStr(cur);
-    if (allFeriados[key]) {
-      resultado.push(formatarData(key) + " (" + DIAS_SEMANA[cur.getDay()] + ")");
+/* ══════════════════════════
+   GERENCIAMENTO DE CONTAS DE USUÁRIO (ADM)
+══════════════════════════ */
+async function carregarUsuarios() {
+  try {
+    const snap = await getDocs(collection(db, "usuarios"));
+    const lista = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const grid = document.getElementById("users-grid");
+    if (!lista.length) {
+      grid.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>Nenhum usuário cadastrado.</p></div>`;
+      return;
     }
-    cur.setDate(cur.getDate() + 1);
+    grid.innerHTML = lista.map(u => {
+      const iniciais = u.nome.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase();
+      return `<div class="user-card">
+        <div class="user-card-avatar">${iniciais}</div>
+        <div class="user-card-info">
+          <strong>${u.nome}</strong>
+          <span>@${u.id}</span>
+          <span class="nivel-badge ${u.nivel === 'adm' ? 'nivel-adm' : 'nivel-user'}">${u.nivel === 'adm' ? 'Administrador' : 'Usuário'}</span>
+        </div>
+        ${u.id !== usuarioAtual.id ? `<div class="user-card-actions"><button class="btn-icon del" title="Excluir Usuário" onclick="excluirUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button></div>` : ""}
+      </div>`;
+    }).join("");
+  } catch(e) { 
+    console.error("Erro ao carregar lista de usuários:", e);
+    toast("erro", "Erro ao carregar usuários."); 
   }
-  return resultado;
 }
+
+window.criarUsuario = async () => {
+  const nome  = document.getElementById("nu-nome").value.trim();
+  const login = document.getElementById("nu-login").value.trim().toLowerCase();
+  const senha = document.getElementById("nu-senha").value.trim();
+  const nivel = document.getElementById("nu-nivel").value;
+  if (!nome || !login || !senha) { toast("aviso", "Preencha todos os campos."); return; }
+  if (senha.length < 6) { toast("aviso", "A senha deve ter no mínimo 6 caracteres."); return; }
+  
+  loading(true);
+  try {
+    const userDocRef = doc(db, "usuarios", login);
+    const snap = await getDoc(userDocRef);
+    if (snap.exists()) { toast("aviso", "Este usuário já está cadastrado."); return; }
+    
+    // Gera salt aleatório. A conta no Firebase Auth será criada automaticamente no primeiro login do usuário.
+    const authSalt = String(Date.now());
+    await setDoc(userDocRef, { nome, senha, nivel, authSalt });
+    
+    toast("ok", "Usuário criado com sucesso!");
+    fecharModal("modal-novo-usuario");
+    document.getElementById("nu-nome").value = "";
+    document.getElementById("nu-login").value = "";
+    document.getElementById("nu-senha").value = "";
+    carregarUsuarios();
+  } catch(e) { 
+    console.error("Erro ao criar usuário:", e);
+    toast("erro", "Erro ao criar usuário."); 
+  } finally { 
+    loading(false); 
+  }
+};
+
+window.excluirUsuario = (id, nome) => {
+  document.getElementById("confirmar-msg").innerHTML = `Deseja excluir permanentemente a conta de <strong>${nome}</strong>?`;
+  document.getElementById("btn-confirmar").onclick = async () => {
+    loading(true);
+    try {
+      await deleteDoc(doc(db, "usuarios", id));
+      toast("ok", "Conta de usuário excluída com sucesso.");
+      fecharModal("modal-confirmar");
+      carregarUsuarios();
+    } catch(e) { 
+      console.error("Erro ao deletar usuário do Firestore:", e);
+      toast("erro", "Erro ao excluir."); 
+    } finally { loading(false); }
+  };
+  abrirModal("modal-confirmar");
+};
+
+/* ══════════════════════════
+   CONFIGURAÇÃO DE ACESSO INICIAL
+══════════════════════════ */
+async function setupInicial() {
+  if (!window.location.search.includes("setup=1")) return;
+  try {
+    const snap = await getDoc(doc(db, "usuarios", "admin"));
+    if (snap.exists()) { alert("Admin já cadastrado no Firestore!"); return; }
+    
+    const authSalt = String(Date.now());
+    await setDoc(doc(db, "usuarios", "admin"), { nome: "Administrador", senha: "admin123", nivel: "adm", authSalt });
+    alert("✅ Conta do Administrador criada no Firestore!\nLogin: admin\nSenha: admin123\n\nRemova '?setup=1' da URL e tente realizar o login.");
+  } catch(e) { alert("Falha na configuração inicial: " + e.message); }
+}
+setupInicial();
+
+/* ══════════════════════════
+   FECHAMENTO AUTOMÁTICO DE MODAIS
+══════════════════════════ */
+document.querySelectorAll(".modal-overlay").forEach(overlay => {
+  overlay.addEventListener("click", e => { if (e.target === overlay) fecharModal(overlay.id); });
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape")
+    document.querySelectorAll(".modal-overlay.open").forEach(m => fecharModal(m.id));
+});
 
 </script>
 </body>
