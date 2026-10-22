@@ -632,9 +632,29 @@
     
     .add-feriado-row {
       display: grid; grid-template-columns: 1.2fr 0.8fr auto;
-      gap: 10px; align-items: end; margin-top: 20px;
-      border-top: 1px dashed var(--border); padding-top: 20px;
+      gap: 10px; align-items: end; margin-top: 14px;
     }
+    .add-periodo-row {
+      display: grid; grid-template-columns: 1.2fr 0.6fr 0.6fr auto;
+      gap: 10px; align-items: end; margin-top: 14px;
+    }
+    @media(max-width: 640px) {
+      .add-feriado-row, .add-periodo-row { grid-template-columns: 1fr; }
+    }
+    .feriado-tipo-tabs {
+      display: flex; gap: 8px; margin-top: 16px;
+      border-top: 1px dashed var(--border); padding-top: 16px;
+    }
+    .btn-tipo-feriado {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: var(--radius-sm);
+      font-size: 12px; font-weight: 600; font-family: var(--font);
+      cursor: pointer; border: 1.5px solid var(--border);
+      background: var(--bg-card); color: var(--text-muted); transition: var(--trans);
+    }
+    .btn-tipo-feriado:hover { background: var(--bg-hover); color: var(--text-main); }
+    .btn-tipo-feriado.ativo { background: var(--primary); color: white; border-color: var(--primary); }
+
 
     /* ═══════════════════════════════
        TELA ADM USUÁRIOS
@@ -1138,16 +1158,45 @@
           </p>
           <div class="feriado-list" id="feriados-extra-list"></div>
           
+          <div class="feriado-tipo-tabs" id="feriado-tipo-tabs">
+            <button type="button" class="btn-tipo-feriado ativo" id="btn-tipo-dia" onclick="setTipoCadastroFeriado('dia')">
+              <i class="fas fa-calendar-day"></i> Dia Único
+            </button>
+            <button type="button" class="btn-tipo-feriado" id="btn-tipo-periodo" onclick="setTipoCadastroFeriado('periodo')">
+              <i class="fas fa-calendar-week"></i> Período / Recesso
+            </button>
+          </div>
+
+          <!-- FORMULÁRIO DIA ÚNICO -->
           <div class="add-feriado-row" id="add-feriado-row">
             <div class="fgroup" style="margin:0">
               <label class="light-lbl" style="font-size:11px">Nome do Feriado</label>
-              <input type="text" id="novo-feriado-nome" placeholder="Ex: Anec. de Goiás" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app); padding:8px 12px;"/>
+              <input type="text" id="novo-feriado-nome" placeholder="Ex: Aniv. de Goiânia" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app); padding:8px 12px;"/>
             </div>
             <div class="fgroup" style="margin:0">
-              <label class="light-lbl" style="font-size:11px">Data (DD/MM)</label>
-              <input type="text" id="novo-feriado-data" placeholder="Ex: 24/10" maxlength="5" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app); padding:8px 12px;"/>
+              <label class="light-lbl" style="font-size:11px">Data (DD/MM ou DD/MM/AAAA)</label>
+              <input type="text" id="novo-feriado-data" placeholder="Ex: 24/10" maxlength="10" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app); padding:8px 12px;"/>
             </div>
-            <button class="btn-pri" style="padding: 10px 14px;" onclick="adicionarFeriado()">
+            <button class="btn-pri" style="padding: 10px 14px;" title="Adicionar Feriado" onclick="adicionarFeriado()">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+
+          <!-- FORMULÁRIO PERÍODO / RECESSO -->
+          <div class="add-periodo-row hidden" id="add-periodo-row">
+            <div class="fgroup" style="margin:0">
+              <label class="light-lbl" style="font-size:11px">Nome do Período / Suspensão</label>
+              <input type="text" id="novo-periodo-nome" placeholder="Ex: Recesso Forense (Art. 220 CPC)" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app); padding:8px 12px;"/>
+            </div>
+            <div class="fgroup" style="margin:0">
+              <label class="light-lbl" style="font-size:11px">Data Início</label>
+              <input type="text" id="novo-periodo-inicio" placeholder="Ex: 20/12" maxlength="10" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app); padding:8px 12px;"/>
+            </div>
+            <div class="fgroup" style="margin:0">
+              <label class="light-lbl" style="font-size:11px">Data Fim</label>
+              <input type="text" id="novo-periodo-fim" placeholder="Ex: 20/01" maxlength="10" style="color:var(--text-main); border-color:var(--border); background:var(--bg-app); padding:8px 12px;"/>
+            </div>
+            <button class="btn-pri" style="padding: 10px 14px;" title="Adicionar Período" onclick="adicionarPeriodo()">
               <i class="fas fa-plus"></i>
             </button>
           </div>
@@ -1463,6 +1512,38 @@ function objParaStr(dt) {
 /* ══════════════════════════
    CÁLCULO DE PRAZOS E TIMELINE
 ══════════════════════════ */
+function dataEstaNoPeriodo(dateObj, dataInicio, dataFim) {
+  if (!dataInicio || !dataFim) return false;
+  const y = dateObj.getFullYear();
+  const m = dateObj.getMonth() + 1;
+  const d = dateObj.getDate();
+
+  const iniPartes = dataInicio.split("/").map(Number);
+  const fimPartes = dataFim.split("/").map(Number);
+
+  if (iniPartes.length === 3 && fimPartes.length === 3) {
+    const [dI, mI, aI] = iniPartes;
+    const [dF, mF, aF] = fimPartes;
+    const dtIni = new Date(aI, mI - 1, dI, 0, 0, 0);
+    const dtFim = new Date(aF, mF - 1, dF, 23, 59, 59);
+    const dtAlvo = new Date(y, m - 1, d, 12, 0, 0);
+    return dtAlvo >= dtIni && dtAlvo <= dtFim;
+  } else {
+    const [dI, mI] = iniPartes;
+    const [dF, mF] = fimPartes;
+    const valAtual = m * 100 + d;
+    const valIni = mI * 100 + dI;
+    const valFim = mF * 100 + dF;
+
+    if (valIni <= valFim) {
+      return valAtual >= valIni && valAtual <= valFim;
+    } else {
+      // Vira o ano (ex: 20/12 a 20/01)
+      return valAtual >= valIni || valAtual <= valFim;
+    }
+  }
+}
+
 function obterNomeFeriado(dateObj) {
   const y = dateObj.getFullYear();
   const m = String(dateObj.getMonth() + 1).padStart(2, "0");
@@ -1470,18 +1551,35 @@ function obterNomeFeriado(dateObj) {
   const keyMD = `${d}/${m}`;
   const keyYMD = `${y}-${m}-${d}`;
   
+  // 1. Feriados e Períodos Extras cadastrados
   const extraF = feriadosExtra.find(f => {
+    if (f.tipo === "periodo" || f.dataInicio || (f.data && f.data.includes(" a "))) {
+      let ini = f.dataInicio;
+      let fim = f.dataFim;
+      if (!ini && f.data && f.data.includes(" a ")) {
+        const partes = f.data.split(" a ");
+        ini = partes[0].trim();
+        fim = partes[1].trim();
+      }
+      return dataEstaNoPeriodo(dateObj, ini, fim);
+    }
     if (f.data && f.data.includes("/")) {
-      const [fd, fm] = f.data.split("/");
-      return fd.padStart(2,"0") === d && fm.padStart(2,"0") === m;
+      const partes = f.data.split("/");
+      if (partes.length === 2) {
+        return partes[0].padStart(2, "0") === d && partes[1].padStart(2, "0") === m;
+      } else if (partes.length === 3) {
+        return partes[0].padStart(2, "0") === d && partes[1].padStart(2, "0") === m && Number(partes[2]) === y;
+      }
     }
     return false;
   });
   if (extraF) return extraF.nome;
   
+  // 2. Feriados Nacionais Fixos
   const fixo = FERIADOS_NACIONAIS.find(f => f.data === keyMD);
   if (fixo) return fixo.nome;
   
+  // 3. Feriados Nacionais Móveis
   const a = y % 19, b = Math.floor(y / 100), c = y % 100;
   const d2 = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
   const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d2 - g + 15) % 30;
@@ -1526,13 +1624,16 @@ function getFeriadosAno(ano) {
   const corpus = new Date(pascoa); corpus.setDate(pascoa.getDate() + 60);
   [sexta, carnaval1, carnaval2, corpus].forEach(d => feriadosFixos.push(objParaStr(d)));
 
-  feriadosExtra.forEach(f => {
-    if (f.data && f.data.includes("/")) {
-      const [dd, mm] = f.data.split("/");
-      const chave = `${ano}-${mm.padStart(2,"0")}-${dd.padStart(2,"0")}`;
-      feriadosFixos.push(chave);
+  // Adiciona feriados e dias de período deste ano
+  const inicioAno = new Date(ano, 0, 1);
+  const fimAno = new Date(ano, 11, 31);
+  let cur = new Date(inicioAno);
+  while (cur <= fimAno) {
+    if (obterNomeFeriado(cur)) {
+      feriadosFixos.push(objParaStr(cur));
     }
-  });
+    cur.setDate(cur.getDate() + 1);
+  }
 
   return new Set(feriadosFixos);
 }
@@ -1541,6 +1642,10 @@ function calcularVencimento(dataInicio, qtdDias, tipo) {
   const dt = dataParaObj(dataInicio);
   if (tipo === "corridos") {
     dt.setDate(dt.getDate() + qtdDias);
+    // Prorrogação se o último dia cair em final de semana ou feriado
+    while (dt.getDay() === 0 || dt.getDay() === 6 || obterNomeFeriado(dt)) {
+      dt.setDate(dt.getDate() + 1);
+    }
     return objParaStr(dt);
   }
   let cont = 0;
@@ -1548,9 +1653,9 @@ function calcularVencimento(dataInicio, qtdDias, tipo) {
   while (cont < qtdDias) {
     atual.setDate(atual.getDate() + 1);
     const dow = atual.getDay();
-    const key = objParaStr(atual);
-    const feriadosSet = getFeriadosAno(atual.getFullYear());
-    if (dow !== 0 && dow !== 6 && !feriadosSet.has(key)) cont++;
+    if (dow !== 0 && dow !== 6 && !obterNomeFeriado(atual)) {
+      cont++;
+    }
   }
   return objParaStr(atual);
 }
@@ -1743,10 +1848,14 @@ async function iniciarApp() {
     document.getElementById("card-feriados-extra").style.display = "block";
     document.getElementById("add-feriado-row").style.display = "grid";
     carregarUsuarios();
+    document.getElementById("feriado-tipo-tabs")?.classList.remove("hidden");
+    document.getElementById("add-feriado-row")?.classList.remove("hidden");
   } else {
     document.getElementById("btn-nav-adm").classList.add("hidden");
     document.getElementById("card-feriados-extra").style.display = "block";
-    document.getElementById("add-feriado-row").style.display = "none";
+    document.getElementById("feriado-tipo-tabs")?.classList.add("hidden");
+    document.getElementById("add-feriado-row")?.classList.add("hidden");
+    document.getElementById("add-periodo-row")?.classList.add("hidden");
   }
 
   // Recupera preferências locais de sidebar e tema
@@ -1760,6 +1869,7 @@ async function iniciarApp() {
   }
 
   await carregarConfig();
+  await carregarFeriadosExtra();
   await carregarProcessos();
   renderFeriadosNacionais();
 }
@@ -2280,19 +2390,48 @@ async function carregarFeriadosExtra() {
   renderFeriadosExtra();
 }
 
+window.setTipoCadastroFeriado = (tipo) => {
+  const btnDia = document.getElementById("btn-tipo-dia");
+  const btnPeriodo = document.getElementById("btn-tipo-periodo");
+  const rowDia = document.getElementById("add-feriado-row");
+  const rowPeriodo = document.getElementById("add-periodo-row");
+
+  if (tipo === "periodo") {
+    btnDia.classList.remove("ativo");
+    btnPeriodo.classList.add("ativo");
+    rowDia.classList.add("hidden");
+    rowPeriodo.classList.remove("hidden");
+  } else {
+    btnDia.classList.add("ativo");
+    btnPeriodo.classList.remove("ativo");
+    rowDia.classList.remove("hidden");
+    rowPeriodo.classList.add("hidden");
+  }
+};
+
 function renderFeriadosExtra() {
   const list = document.getElementById("feriados-extra-list");
   if (!feriadosExtra.length) {
-    list.innerHTML = `<p style="font-size:13px;color:var(--text-light);padding:8px 0">Nenhum feriado cadastrado.</p>`;
+    list.innerHTML = `<p style="font-size:13px;color:var(--text-light);padding:8px 0">Nenhum feriado ou período cadastrado.</p>`;
     return;
   }
-  list.innerHTML = feriadosExtra.map((f, i) =>
-    `<div class="feriado-item">
-      <span class="feriado-nome">${f.nome}</span>
-      <span class="feriado-data">${f.data}</span>
-      ${usuarioAtual?.nivel === "adm" ? `<button class="btn-del-feriado" onclick="removerFeriado(${i})"><i class="fas fa-trash"></i></button>` : ""}
-    </div>`
-  ).join("");
+  list.innerHTML = feriadosExtra.map((f, i) => {
+    const isPeriodo = f.tipo === "periodo" || (f.data && f.data.includes(" a "));
+    const badge = isPeriodo
+      ? `<span style="font-size:10px; font-weight:700; background:rgba(37,99,235,0.15); color:var(--primary); padding:2px 8px; border-radius:12px; margin-left:6px;"><i class="fas fa-arrows-left-right"></i> Período</span>`
+      : "";
+    return `
+    <div class="feriado-item">
+      <div>
+        <span class="feriado-nome">${f.nome}</span>
+        ${badge}
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="feriado-data" style="font-weight:600; color:var(--text-main)">${f.data}</span>
+        ${usuarioAtual?.nivel === "adm" ? `<button class="btn-del-feriado" title="Excluir feriado" onclick="removerFeriado(${i})"><i class="fas fa-trash"></i></button>` : ""}
+      </div>
+    </div>`;
+  }).join("");
 }
 
 window.adicionarFeriado = async () => {
@@ -2300,20 +2439,63 @@ window.adicionarFeriado = async () => {
   const nome = document.getElementById("novo-feriado-nome").value.trim();
   const data = document.getElementById("novo-feriado-data").value.trim();
   if (!nome || !data) { toast("aviso", "Preencha nome e data."); return; }
-  if (!/^\d{2}\/\d{2}$/.test(data)) { toast("aviso", "Formato de data incorreto (DD/MM)."); return; }
+  if (!/^\d{2}\/\d{2}(\/\d{4})?$/.test(data)) { toast("aviso", "Formato de data incorreto. Use DD/MM ou DD/MM/AAAA."); return; }
   
-  feriadosExtra.push({ nome, data });
+  feriadosExtra.push({ nome, data, tipo: "dia" });
   loading(true);
   try {
     await setDoc(doc(db, "config", "feriados_extra"), { lista: feriadosExtra });
-    toast("ok", "Feriado regional adicionado.");
+    toast("ok", "Feriado adicionado com sucesso.");
     document.getElementById("novo-feriado-nome").value = "";
     document.getElementById("novo-feriado-data").value = "";
     renderFeriadosExtra();
+    renderCalcFeriados();
+    renderDashboard();
+    renderTabela("inicio");
   } catch(e) { 
     console.error("Erro ao salvar feriado extra:", e);
     feriadosExtra.pop(); 
     toast("erro", "Erro ao cadastrar feriado."); 
+  } finally { loading(false); }
+};
+
+window.adicionarPeriodo = async () => {
+  if (usuarioAtual?.nivel !== "adm") { toast("aviso", "Função exclusiva para administradores."); return; }
+  const nome = document.getElementById("novo-periodo-nome").value.trim();
+  const inicio = document.getElementById("novo-periodo-inicio").value.trim();
+  const fim = document.getElementById("novo-periodo-fim").value.trim();
+  if (!nome || !inicio || !fim) { toast("aviso", "Preencha o nome, data inicial e data final."); return; }
+  
+  const regexData = /^\d{2}\/\d{2}(\/\d{4})?$/;
+  if (!regexData.test(inicio) || !regexData.test(fim)) {
+    toast("aviso", "Formato de data incorreto. Use DD/MM ou DD/MM/AAAA.");
+    return;
+  }
+  
+  const novoItem = {
+    nome,
+    data: `${inicio} a ${fim}`,
+    dataInicio: inicio,
+    dataFim: fim,
+    tipo: "periodo"
+  };
+  
+  feriadosExtra.push(novoItem);
+  loading(true);
+  try {
+    await setDoc(doc(db, "config", "feriados_extra"), { lista: feriadosExtra });
+    toast("ok", "Período cadastrado com sucesso.");
+    document.getElementById("novo-periodo-nome").value = "";
+    document.getElementById("novo-periodo-inicio").value = "";
+    document.getElementById("novo-periodo-fim").value = "";
+    renderFeriadosExtra();
+    renderCalcFeriados();
+    renderDashboard();
+    renderTabela("inicio");
+  } catch(e) { 
+    console.error("Erro ao salvar período:", e);
+    feriadosExtra.pop(); 
+    toast("erro", "Erro ao cadastrar período."); 
   } finally { loading(false); }
 };
 
@@ -2323,8 +2505,11 @@ window.removerFeriado = async (idx) => {
   loading(true);
   try {
     await setDoc(doc(db, "config", "feriados_extra"), { lista: feriadosExtra });
-    toast("ok", "Feriado regional excluído.");
+    toast("ok", "Feriado / período excluído.");
     renderFeriadosExtra();
+    renderCalcFeriados();
+    renderDashboard();
+    renderTabela("inicio");
   } catch(e) { 
     console.error("Erro ao remover feriado extra:", e);
     feriadosExtra.splice(idx, 0, removido);
